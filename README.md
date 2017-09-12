@@ -260,5 +260,5 @@ All fields are validated whenever end users edit the contained data. FormsFX off
 
 # Documentation
 
-- [Javadocs](https://dieterholz.github.io/FormsFX)
+- [Javadocs](http://dlsc.com/wp-content/html/formsfx/apidocs/)
 - [Report](./docs/Project%20Report.pdf)
