@@ -1,0 +1,278 @@
+package com.dlsc.formsfx.model.structure;
+
+import com.dlsc.formsfx.model.util.BindingMode;
+import com.dlsc.formsfx.model.validators.ValidationResult;
+import com.dlsc.formsfx.model.validators.Validator;
+import com.dlsc.formsfx.view.controls.SimpleListViewControl;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * This class provides an implementation of a {@link MultiSelectionField}
+ * allowing for multi-selection.
+ *
+ * @author Sacha Schmid
+ * @author Rinesch Murugathas
+ */
+public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionField<V>> {
+
+    /**
+     * A {@code MultiSelectionField} can have multiple items selected. These
+     * items are stored in a {@code ListProperty}.
+     */
+    private final ListProperty<V> persistentSelection = new SimpleListProperty<>(FXCollections.observableArrayList());
+    private final ListProperty<V> selection = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    /**
+     * Every field contains a list of validators. The validators are limited to
+     * the ones that correspond to the field's type.
+     */
+    private final List<Validator<ObservableList<V>>> validators = new ArrayList<>();
+
+    /**
+     * The constructor of {@code MultiSelectionField}.
+     *
+     * @param items
+     *              The property that is used to store the items of the field.
+     * @param selection
+     *              The list of indices of items that are to be selected.
+     */
+    MultiSelectionField(ListProperty<V> items, List<Integer> selection) {
+        super(items);
+
+        // Add items to the selection, based on their indices. This also
+        // determines the persistent selection.
+
+        selection.forEach(i -> {
+            if (i < this.items.size() && i >= 0) {
+                this.selection.add(this.items.get(i));
+            }
+        });
+
+        persistentSelection.addAll(this.selection.getValue());
+
+        // The changed property is a binding that compares the persistent
+        // selection with the current selection. This means that a field is
+        // marked as changed until Field::persist or Field::reset are called
+        // or the selection is back to the persistent selection.
+
+        changed.bind(Bindings.createBooleanBinding(() -> !persistentSelection.equals(this.selection), persistentSelection, this.selection));
+
+        // Changes to the user input are reflected in the value only if the new
+        // user input is valid.
+
+        this.selection.addListener((observable, oldValue, newValue) -> validate());
+
+        // Clear the current selection and persistent selection whenever new
+        // items are added. The selection is built back up if it is passed along
+        // with the new list of items.
+
+        items.addListener((observable, oldValue, newValue) -> {
+            this.selection.clear();
+            persistentSelection.clear();
+        });
+
+        renderer = new SimpleListViewControl<>();
+    }
+
+    /**
+     * Updates the list of available items to a new list, along with a
+     * pre-defined selection.
+     *
+     * @param newValue
+     *              The new list of items.
+     * @param newSelection
+     *              The new pre-defined selection.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public MultiSelectionField<V> items(List<V> newValue, List<Integer> newSelection) {
+        items.setAll(newValue);
+
+        newSelection.forEach(i -> selection.add(items.get(i)));
+        persistentSelection.setAll(selection.getValue());
+
+        return this;
+    }
+
+    /**
+     * Updates the list of available items to a new list, without a
+     * pre-defined selection.
+     *
+     * @param newValue
+     *              The new list of items.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public MultiSelectionField<V> items(List<V> newValue) {
+        return this.items(newValue, new ArrayList<>());
+    }
+
+    /**
+     * Sets the list of validators for the current field. This overrides all
+     * validators that have previously been added.
+     *
+     * @param newValue
+     *              The validators that are to be used for validating this
+     *              field.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    @SafeVarargs
+    public final MultiSelectionField<V> validate(Validator<ObservableList<V>>... newValue) {
+        validators.clear();
+        Collections.addAll(validators, newValue);
+        validate();
+
+        return this;
+    }
+
+    /**
+     * Adds the element at the given index to the current selection.
+     *
+     * @param index
+     *              The index of the element to be selected.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public MultiSelectionField<V> select(int index) {
+        if (index < items.size() && index > -1 && !selection.contains(items.get(index))) {
+            selection.add(items.get(index));
+        }
+
+        return this;
+    }
+
+    /**
+     * Removes the element at the given index from the current selection.
+     *
+     * @param index
+     *              The index of the element to be removed.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public MultiSelectionField<V> deselect(int index) {
+        if (index < items.size() && selection.contains(items.get(index))) {
+            selection.remove(items.get(index));
+        }
+
+        return this;
+    }
+
+    /**
+     * Binds the given items and selection property with the corresponding
+     * fields.
+     *
+     * @param itemsBinding
+     *          The items property to be bound with.
+     *
+     * @param selectionBinding
+     *          The selection property to be bound with.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public MultiSelectionField<V> bind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
+        items.bindBidirectional(itemsBinding);
+        persistentSelection.unbindBidirectional(selectionBinding);
+
+        return this;
+    }
+
+    /**
+     * Unbinds the given items and selection property with the corresponding
+     * fields.
+     *
+     * @param itemsBinding
+     *          The items property to be unbound with.
+     *
+     * @param selectionBinding
+     *          The selection property to be unbound with.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public MultiSelectionField<V> unbind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
+        items.unbindBidirectional(itemsBinding);
+        persistentSelection.unbindBidirectional(selectionBinding);
+
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setBindingMode(BindingMode newValue) {
+        if (BindingMode.CONTINUOUS.equals(newValue)) {
+            selection.addListener(bindingModeListener);
+        } else {
+            selection.removeListener(bindingModeListener);
+        }
+    }
+
+    /**
+     * Stores the field's current selection in its persistent selection. This
+     * stores the user's changes in the model.
+     */
+    void persist() {
+        if (!isValid()) {
+            return;
+        }
+
+        persistentSelection.setAll(selection.getValue());
+    }
+
+    /**
+     * Sets the field's current selection to its persistent selection, thus
+     * resetting any changes made by the user.
+     */
+    void reset() {
+        if (!hasChanged()) {
+            return;
+        }
+
+        selection.setAll(persistentSelection.getValue());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    boolean validateRequired() {
+        return !isRequired() || selection.size() > 0;
+    }
+
+    /**
+     * Validates a user input based on the field's selection and its validation
+     * rules. Also considers the {@code required} flag. This method directly
+     * updates the {@code valid} property.
+     *
+     * @return Returns whether the user selection is a valid value or not.
+     */
+    boolean validate() {
+
+        // Check all validation rules and collect any error messages.
+
+        List<String> errorMessages = validators.stream()
+                .map(v -> v.validate(selection.getValue()))
+                .filter(r -> !r.getResult())
+                .map(ValidationResult::getErrorMessage)
+                .collect(Collectors.toList());
+
+        return super.validate(errorMessages);
+    }
+
+    public ObservableList<V> getSelection() {
+        return selection.get();
+    }
+
+    public ListProperty<V> selectionProperty() {
+        return selection;
+    }
+
+}

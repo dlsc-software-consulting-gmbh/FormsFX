@@ -1,0 +1,103 @@
+@font-face {
+    font-family: 'Flaticon';
+    src: url(/flaticon.ttf);
+}
+
+.root-pane {
+    -fx-padding: 0;
+    -fx-font-family: 'Arial';
+}
+
+.flaticon .text {
+    -fx-font-family: 'Flaticon';
+}
+
+.lang-button {
+    -fx-border-color: dimgrey;
+    -fx-background-color: white;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+    -fx-border-width: 1px;
+    -fx-text-fill: dimgrey;
+    -fx-font-size: 24px;
+    -fx-cursor: hand;
+}
+
+.lang-button:disabled {
+    -fx-background-color: dimgrey;
+    -fx-opacity: 1;
+    -fx-text-fill: white;
+}
+
+.lang-button--left {
+    -fx-background-radius: 5px 0 0 5px;
+    -fx-border-radius: 5px 0 0 5px;
+}
+
+.lang-button--right {
+    -fx-background-radius: 0 5px 5px 0;
+    -fx-border-radius: 0 5px 5px 0;
+}
+
+.scroll-pane {
+    -fx-padding: 0;
+}
+
+.content {
+    -fx-padding: 10;
+}
+
+.controls {
+    -fx-background-color: #e0e0e0;
+    -fx-border-color: #b1b1b1;
+    -fx-border-width: 0 0 0 1px;
+}
+
+.save-button,
+.reset-button,
+.toggle-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+    -fx-text-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+}
+
+.save-button {
+    -fx-text-fill: #fff;
+    -fx-background-color: #337ab7;
+    -fx-border-color: darkblue;
+}
+
+.save-button:hover {
+    -fx-background-color: #2d6da4;
+}
+
+.save-button:pressed {
+    -fx-background-color: #286192;
+}
+
+.reset-button,
+.toggle-button {
+    -fx-text-fill: #333;
+    -fx-background-color: #fff;
+    -fx-border-color: #ababab;
+}
+
+.reset-button:hover,
+.toggle-button:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+.reset-button:pressed {
+    -fx-text-fill: #fff;
+    -fx-background-color: red;
+    -fx-border-color: darkred;
+}
+
+.bordered {
+    -fx-border-color: #b1b1b1 transparent transparent transparent;
+    -fx-border-width: 1px;
+}

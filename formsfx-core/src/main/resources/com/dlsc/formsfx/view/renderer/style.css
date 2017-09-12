@@ -1,0 +1,217 @@
+/*******************
+ * GENERAL STYLING *
+ *******************/
+
+.formsfx-group {
+    -fx-border-width: 1px;
+    -fx-border-color: rgb(200, 200, 200);
+    -fx-border-insets: 10px;
+}
+
+.simple-control .text-field,
+.simple-control .text-area {
+    -fx-padding: 5px;
+}
+
+.simple-control .read-only-label {
+    -fx-padding: 0 6px;
+}
+
+/*********************
+ * TEXT AREA STYLING *
+ *********************/
+
+.simple-textarea {
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-highlight-fill: derive(-fx-control-inner-background,-20%);
+    -fx-highlight-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+    /*noinspection CssInvalidFunction*/
+    -fx-background-color:
+            linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+            linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3, 2;
+    -fx-cursor: text;
+    -fx-padding: 0.333333em;
+}
+
+.simple-textarea:focused {
+    -fx-highlight-fill: -fx-accent;
+    -fx-highlight-text-fill: white;
+    /*noinspection CssInvalidFunction*/
+    -fx-background-color:
+            -fx-focus-color,
+            -fx-control-inner-background,
+            -fx-faint-focus-color,
+            linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: -0.2, 1, -1.4, 3;
+    -fx-background-radius: 3, 2, 4, 0;
+    -fx-prompt-text-fill: transparent;
+}
+
+.simple-textarea .content {
+    -fx-padding: 0;
+    -fx-cursor: text;
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-radius: 0;
+}
+
+/********************
+ * LISTVIEW STYLING *
+ ********************/
+
+.simple-listview-control .list-view {
+    -fx-padding: 0 0 0 5px;
+    -fx-border-color: transparent;
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 5px 5px 5px 0;
+}
+
+/***********************
+ * RADIOBUTTON STYLING *
+ ***********************/
+
+.simple-radio-control > VBox {
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 5px 5px 5px 0;
+    -fx-border-color: transparent;
+}
+
+/*********************
+ * COMBOBOX STYLING *
+ *********************/
+
+.simple-select-control .read-only-label {
+    -fx-padding: 0 9px;
+}
+
+/*****************
+ * STATE STYLING *
+ *****************/
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:changed .text-field,
+.simple-control:changed .text-area,
+.simple-control:required .text-field,
+.simple-control:required .text-area,
+.simple-control:invalid .text-field,
+.simple-control:invalid .text-area,
+.simple-select-control:changed .arrow-button,
+.simple-select-control:required .arrow-button,
+.simple-select-control:invalid .arrow-button,
+.simple-listview-control:changed .list-view,
+.simple-listview-control:required .list-view,
+.simple-listview-control:invalid .list-view {
+    -fx-padding: 0 0 0 5px;
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 5px 5px 5px 0;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-boolean-control:invalid > VBox,
+.simple-boolean-control:required > VBox,
+.simple-boolean-control:changed > VBox,
+.simple-checkbox-control:changed > VBox,
+.simple-checkbox-control:required > VBox,
+.simple-checkbox-control:invalid > VBox,
+.simple-radio-control:changed > VBox,
+.simple-radio-control:required > VBox,
+.simple-radio-control:invalid > VBox {
+    -fx-border-width: 0 4px 0 0;
+    -fx-border-insets: 0 5px 0 0;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:required .text-field,
+.simple-control:required .text-area,
+.simple-boolean-control:required > VBox,
+.simple-select-control:required .arrow-button,
+.simple-radio-control:required > VBox,
+.simple-checkbox-control:required > VBox,
+.simple-listview-control:required .list-view {
+    -fx-border-color: transparent #EBDE4C transparent transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:changed .text-field,
+.simple-control:changed .text-area,
+.simple-boolean-control:changed > VBox,
+.simple-select-control:changed .arrow-button,
+.simple-radio-control:changed > VBox,
+.simple-checkbox-control:changed > VBox,
+.simple-listview-control:changed .list-view {
+    -fx-border-color: transparent #4cadeb transparent transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-control:invalid .text-field,
+.simple-control:invalid .text-area,
+.simple-boolean-control:invalid > VBox,
+.simple-select-control:invalid .arrow-button,
+.simple-radio-control:invalid > VBox,
+.simple-checkbox-control:invalid > VBox,
+.simple-listview-control:invalid .list-view {
+    -fx-control-inner-background: #ffe5e5;
+    -fx-border-color: transparent #EB4C4C transparent transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-select-control:invalid .combo-box-base {
+    -fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, #ffe5e5;
+    -fx-background-insets: 0 0 -1 0, 0, 1, 2;
+    -fx-background-radius: 3px, 3px, 2px, 1px;
+}
+
+.simple-checkbox-control:disabled > VBox,
+.simple-radio-control:disabled > VBox,
+.simple-boolean-control:disabled > VBox,
+.simple-listview-control:disabled .list-view {
+    -fx-border-color: transparent;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-select-control:changed .arrow,
+.simple-select-control:required .arrow,
+.simple-select-control:invalid .arrow {
+    -fx-pref-width: 15px;
+    -fx-border-insets: 0 5px 0 0;
+    -fx-background-insets: 0 5px 0 0;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-radio-control:invalid .radio-button > .radio,
+.simple-boolean-control:invalid .check-box > .box,
+.simple-checkbox-control:invalid .check-box > .box {
+    -fx-background-color:
+            -fx-shadow-highlight-color,
+            -fx-outer-border,
+            -fx-inner-border,
+            #ffe5e5;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-radio-control:invalid .radio-button:hover > .radio,
+.simple-radio-control:invalid .radio-button:armed > .radio {
+    -fx-color: #ffcccc;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-radio-control:invalid .radio-button:focused > .radio,
+.simple-boolean-control:invalid .check-box:focused > .box,
+.simple-checkbox-control:invalid .check-box:focused > .box {
+    -fx-background-color:
+            -fx-focus-color,
+            -fx-inner-border,
+            -fx-body-color,
+            -fx-faint-focus-color,
+            #ffe5e5;
+}
+
+/*noinspection CssInvalidPseudoSelector*/
+.simple-boolean-control:invalid .check-box:hover > .box,
+.simple-boolean-control:invalid .check-box:armed > .box,
+.simple-checkbox-control:invalid .check-box:hover > .box,
+.simple-checkbox-control:invalid .check-box:armed > .box {
+    -fx-color: #ffcccc;
+}
