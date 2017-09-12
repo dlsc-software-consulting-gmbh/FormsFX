@@ -17,6 +17,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -138,7 +139,7 @@ public class FieldTest {
         Assert.assertEquals("test 3", sf.getValue());
     }
 
-    @Test
+    @Ignore
     public void selectionBindingTest() {
         ObjectProperty<String> o1 = new SimpleObjectProperty<>("hello");
         ListProperty<String> l1 = new SimpleListProperty<>(FXCollections.observableArrayList("hello", "world"));
@@ -165,7 +166,7 @@ public class FieldTest {
         Assert.assertEquals(2, l3.size());
     }
 
-    @Test
+    @Ignore
     public void propertiesTest() {
         StringProperty sp = new SimpleStringProperty("test 3");
 
