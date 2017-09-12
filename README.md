@@ -1,3 +1,5 @@
+import bleach
+
 # FormsFX
 **Forms for business application made easy. Creating forms in Java has never been this easy!**
 
@@ -63,7 +65,7 @@ Option | Description
 
 The following table shows how to create different fields and how they look by default:
 
-<table>
+html = bleach.clean(markdown.markdown("<table>
   <tbody>
     <tr>
       <td colspan="2">String Control</td>
@@ -192,7 +194,7 @@ The following table shows how to create different fields and how they look by de
       </td>
     </tr>
   </tbody>
-</table>
+</table>"));
 
 ## Rendering a form
 
