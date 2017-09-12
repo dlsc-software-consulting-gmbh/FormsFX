@@ -1,5 +1,3 @@
-import bleach
-
 # FormsFX
 **Forms for business application made easy. Creating forms in Java has never been this easy!**
 
@@ -61,6 +59,142 @@ Option | Description
 `styleClass(List&lt;String&gt;)` | Adds styling hooks to the field. This can be used on the view layer.
 `span(int)` <br /> `span(ColSpan)` | Determines, how many columns the field should span on the view layer. Can be a number between 1 and 12 or a ColSpan fraction.
 `render(SimpleControl)` | Determines the control that is used to render this field on the view layer.
+
+
+The following table shows how to create different fields and how they look by default:
+
+String Control
+
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">String Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/StringField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofStringType("CHF")
+     .label("Currency")</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">Integer Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/IntegerField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofIntegerType(8401120)
+     .label("Population")</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">Double Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/DoubleField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofDoubleType(41285.0)
+       .label("Area")</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">Boolean Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/BooleanField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofBooleanType(false)
+     .label("Independent")</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">ComboBox Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/ComboBoxField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofSingleSelectionType(Arrays.asList("Zürich (ZH)", "Bern (BE)", …), 1)
+     .label("Capital")</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">RadioButton Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/RadioButtonField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofSingleSelectionType(Arrays.asList("Right", "Left"), 0)
+     .label("Driving on the")
+     .render(new SimpleRadioButtonControl<>())</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">CheckBox Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/CheckBoxField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofMultiSelectionType(Arrays.asList("Africa", "Asia", …), Collections.singletonList(2))
+     .label("Continent")
+     .render(new SimpleCheckBoxControl<>())</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="2">ListView Control</td>
+    </tr>
+    <tr>
+      <td><img src="./docs/images/ListField.png" /></td>
+    </tr>
+    <tr>
+      <td>
+        <pre lang="java">Field.ofMultiSelectionType(Arrays.asList("Zürich (ZH)", "Bern (BE)", …), Arrays.asList(0, 1, …))
+     .label("Biggest Cities")</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## Rendering a form
 
