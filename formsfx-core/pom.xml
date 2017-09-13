@@ -9,11 +9,11 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
-	<parent>
-		<groupId>com.dlsc.formsfx</groupId>
-		<artifactId>formsfx</artifactId>
-		<version>1.0</version>
-	</parent>
+    <parent>
+        <groupId>com.dlsc.formsfx</groupId>
+        <artifactId>formsfx</artifactId>
+        <version>1.0</version>
+    </parent>
 
     <build>
         <plugins>
@@ -40,17 +40,62 @@
                         <link>http://docs.oracle.com/javase/8/javafx/api/</link>
                         <link>http://controlsfx.bitbucket.org</link>
                     </links>
-                    <additionalJOption>-J-Djavafx.javadoc=true</additionalJOption>
+                    <additionalJOption>-J-Djavafx.javadoc=true
+                    </additionalJOption>
                     <failOnError>false</failOnError>
                     <docfilessubdirs>true</docfilessubdirs>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-docs</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the packaging phase -->
+                        <id>make-docs
+                        </id> <!-- this is used for inheritance merges -->
+                        <phase>package
+                        </phase> <!-- bind to the packaging phase -->
                         <goals>
                             <goal>aggregate</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.14</version>
+                <configuration>
+                    <licenseName>apache20</licenseName>
+                    <licenseResolver>${project.baseUri}/src/license
+                    </licenseResolver>
+                    <organizationName>DLSC Software &amp; Consulting
+                    </organizationName>
+                    <inceptionYear>2017</inceptionYear>
+                    <projectName>FormsFX</projectName>
+                    <processStartTag>
+                        ========================LICENSE_START=================================
+                    </processStartTag>
+                    <processEndTag>
+                        =========================LICENSE_END==================================
+                    </processEndTag>
+                    <verbose>false</verbose>
+                    <includes>
+                        <includes>**/*.java</includes>
+                    </includes>
+
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>first</id>
+                        <goals>
+                            <goal>update-file-header</goal>
+                        </goals>
+                        <phase>process-sources</phase>
+                        <configuration>
+                            <roots>
+                                <root>src/main/java</root>
+                                <root>src/test/java</root>
+                            </roots>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
