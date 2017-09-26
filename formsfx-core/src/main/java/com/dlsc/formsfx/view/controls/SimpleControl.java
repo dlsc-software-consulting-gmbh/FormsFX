@@ -43,7 +43,7 @@ public abstract class SimpleControl<F extends Field> extends GridPane implements
     /**
      * This is the Field that is used for binding and update styling changes.
      */
-    F field;
+    protected F field;
 
     /**
      * Tooltip to hold the error message.
