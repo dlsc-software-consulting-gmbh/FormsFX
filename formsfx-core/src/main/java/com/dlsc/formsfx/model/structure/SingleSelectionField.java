@@ -198,7 +198,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      */
     public SingleSelectionField<V> bind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
-        persistentSelection.unbindBidirectional(selectionBinding);
+        persistentSelection.bindBidirectional(selectionBinding);
 
         return this;
     }
