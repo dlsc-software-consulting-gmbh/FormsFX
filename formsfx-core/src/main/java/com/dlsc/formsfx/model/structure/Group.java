@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class Group {
 
-    final List<Field> fields = new ArrayList<>();
+    protected final List<Field> fields = new ArrayList<>();
 
     /**
      * The group acts as a proxy for its contained fields' {@code changed}
