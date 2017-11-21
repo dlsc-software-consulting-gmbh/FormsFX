@@ -52,7 +52,7 @@ public class Group {
      * The translation service is passed down from the containing form. It
      * is used to translate all translatable values of the field.
      */
-    TranslationService translationService;
+    protected TranslationService translationService;
 
     /**
      * Internal constructor for the {@code Group} class. To create new
