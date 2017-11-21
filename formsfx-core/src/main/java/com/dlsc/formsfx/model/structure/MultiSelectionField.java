@@ -201,7 +201,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      */
     public MultiSelectionField<V> bind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
-        persistentSelection.unbindBidirectional(selectionBinding);
+        persistentSelection.bindBidirectional(selectionBinding);
 
         return this;
     }
