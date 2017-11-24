@@ -358,7 +358,7 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
     /**
      * {@inheritDoc}
      */
-    protected void translate(TranslationService service) {
+    public void translate(TranslationService service) {
         super.translate(service);
 
         updateElement(formatError, formatErrorKey);
