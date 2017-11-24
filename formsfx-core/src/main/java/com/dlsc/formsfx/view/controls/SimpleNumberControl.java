@@ -49,7 +49,7 @@ public abstract class SimpleNumberControl<F extends DataField, D extends Number>
      * - The readOnlyLabel is the label to put over editableSpinner.
      */
     private Label fieldLabel;
-    Spinner<D> editableSpinner;
+    protected Spinner<D> editableSpinner;
     private Label readOnlyLabel;
 
     /**
