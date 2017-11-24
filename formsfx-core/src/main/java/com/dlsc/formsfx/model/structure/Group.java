@@ -64,7 +64,7 @@ public class Group {
      *              A varargs list of fields that are contained in this
      *              group.
      */
-    Group(Field... fields) {
+    protected Group(Field... fields) {
         Collections.addAll(this.fields, fields);
 
         // If any of the fields are marked as changed, the group is updated
