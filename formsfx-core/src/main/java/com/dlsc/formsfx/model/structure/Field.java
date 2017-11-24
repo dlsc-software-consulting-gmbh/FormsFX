@@ -554,7 +554,7 @@ public abstract class Field<F extends Field> {
      * @param newValue
      *              The new service to use for translating translatable values.
      */
-    void translate(TranslationService newValue) {
+    protected void translate(TranslationService newValue) {
         translationService = newValue;
 
         if (!isI18N()) {
