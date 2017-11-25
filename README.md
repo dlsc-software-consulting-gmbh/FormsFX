@@ -9,17 +9,16 @@ To use this framework as part of your Maven build simply add the jcentral reposi
 
 ```XML
 <repositories>
-	<repository>
-		<id>jcenter</id>
-		<url>http://jcenter.bintray.com</url>
-	</repository>
+  <repository>
+    <id>jcenter</id>
+    <url>http://jcenter.bintray.com</url>
+  </repository>
 </repositories>
 
 <dependency>
   <groupId>com.dlsc.formsfx</groupId>
   <artifactId>formsfx-core</artifactId>
   <version>1.0</version>
-  <type>pom</type>
 </dependency>
 ```
 
