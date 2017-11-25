@@ -1,5 +1,20 @@
+[ ![Download](https://api.bintray.com/packages/dlsc-oss/repository/FormsFX/images/download.svg) ](https://bintray.com/dlsc-oss/repository/FormsFX/_latestVersion)
+
 # FormsFX
 **Forms for business application made easy. Creating forms in Java has never been this easy!**
+
+## Maven
+
+To use this framework as part of your Maven build simply use the following dependency definition.
+
+```XML
+<dependency>
+  <groupId>com.dlsc.formsfx</groupId>
+  <artifactId>formsfx-core</artifactId>
+  <version>1.0</version>
+  <type>pom</type>
+</dependency>
+```
 
 ## What is FormsFX?
 
