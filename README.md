@@ -5,9 +5,16 @@
 
 ## Maven
 
-To use this framework as part of your Maven build simply use the following dependency definition.
+To use this framework as part of your Maven build simply add the jcentral repository to your pom.xml file and use the following dependency definition.
 
 ```XML
+<repositories>
+	<repository>
+		<id>jcenter</id>
+		<url>http://jcenter.bintray.com</url>
+	</repository>
+</repositories>
+
 <dependency>
   <groupId>com.dlsc.formsfx</groupId>
   <artifactId>formsfx-core</artifactId>
