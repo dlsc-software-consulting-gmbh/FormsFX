@@ -84,7 +84,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
 
-        this.selection.addListener((observable, oldValue, newValue) -> {
+        this.persistentSelection.addListener((observable, oldValue, newValue) -> {
             if (validate()) {
                 this.selection.setValue(newValue);
             }
