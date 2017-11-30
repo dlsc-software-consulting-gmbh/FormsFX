@@ -24,15 +24,14 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleComboBoxControl;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * This class provides an implementation of a {@link SelectionField} allowing
@@ -85,7 +84,11 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
 
-        this.selection.addListener((observable, oldValue, newValue) -> validate());
+        this.selection.addListener((observable, oldValue, newValue) -> {
+            if (validate()) {
+                this.selection.setValue(newValue);
+            }
+        });
 
         // Clear the current selection and persistent selection whenever new
         // items are added. The selection is built back up if it is passed along
