@@ -261,7 +261,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * {@inheritDoc}
      */
     boolean validateRequired() {
-        return !isRequired() || selection.get() != null;
+        return !isRequired() || (isRequired() && selection.get() != null);
     }
 
     /**

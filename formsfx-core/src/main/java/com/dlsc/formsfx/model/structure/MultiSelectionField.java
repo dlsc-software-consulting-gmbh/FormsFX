@@ -264,7 +264,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * {@inheritDoc}
      */
     boolean validateRequired() {
-        return !isRequired() || selection.size() > 0;
+        return !isRequired() || (isRequired() && selection.size() > 0);
     }
 
     /**
