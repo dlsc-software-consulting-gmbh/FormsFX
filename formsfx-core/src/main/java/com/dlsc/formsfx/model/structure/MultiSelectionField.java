@@ -84,7 +84,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
         // marked as changed until Field::persist or Field::reset are called
         // or the selection is back to the persistent selection.
 
-        changed.bind(Bindings.createBooleanBinding(() -> !persistentSelection.equals(this.selection), persistentSelection, this.selection));
+        changed.bind(Bindings.createBooleanBinding(() -> !persistentSelection.equals(this.selection), this.selection, persistentSelection));
 
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
