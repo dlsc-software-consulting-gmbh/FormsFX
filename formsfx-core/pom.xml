@@ -15,8 +15,30 @@
         <version>1.0</version>
     </parent>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-dlsc-oss-repository</id>
+            <name>dlsc-oss-repository</name>
+            <url>https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -30,10 +52,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
+                <version>3.0.0-M1</version>
                 <configuration>
+                    <failOnError>false</failOnError>
+                    <force>true</force>
                     <windowtitle>FormsFX API</windowtitle>
-                    <aggregate>true</aggregate>
                     <detectLinks>true</detectLinks>
                     <links>
                         <link>http://docs.oracle.com/javase/8/docs/api/</link>
@@ -53,6 +76,12 @@
                         </phase> <!-- bind to the packaging phase -->
                         <goals>
                             <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
