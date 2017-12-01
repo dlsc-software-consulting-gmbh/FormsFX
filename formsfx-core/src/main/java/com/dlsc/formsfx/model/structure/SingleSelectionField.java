@@ -79,7 +79,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // marked as changed until Field::persist or Field::reset are called
         // or the selection is back to the persistent selection.
 
-        changed.bind(Bindings.createBooleanBinding(() -> persistentSelection.get() == null ? this.selection.get() != null : !persistentSelection.get().equals(this.selection.get()), persistentSelection, this.selection));
+        changed.bind(Bindings.createBooleanBinding(() -> persistentSelection.get() == null ? this.selection.get() != null : !persistentSelection.get().equals(this.selection.get()), this.selection, persistentSelection));
 
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
@@ -201,7 +201,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      */
     public SingleSelectionField<V> bind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
-        persistentSelection.bindBidirectional(selectionBinding);
+        selection.bindBidirectional(selectionBinding);
 
         return this;
     }
@@ -220,7 +220,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      */
     public SingleSelectionField<V> unbind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.unbindBidirectional(itemsBinding);
-        persistentSelection.unbindBidirectional(selectionBinding);
+        selection.unbindBidirectional(selectionBinding);
 
         return this;
     }
@@ -264,7 +264,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * {@inheritDoc}
      */
     boolean validateRequired() {
-        return !isRequired() || selection.get() != null;
+        return !isRequired() || (isRequired() && selection.get() != null);
     }
 
     /**

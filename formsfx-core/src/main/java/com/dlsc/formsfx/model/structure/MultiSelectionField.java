@@ -24,16 +24,15 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleListViewControl;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class provides an implementation of a {@link MultiSelectionField}
@@ -84,7 +83,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
         // marked as changed until Field::persist or Field::reset are called
         // or the selection is back to the persistent selection.
 
-        changed.bind(Bindings.createBooleanBinding(() -> !persistentSelection.equals(this.selection), persistentSelection, this.selection));
+        changed.bind(Bindings.createBooleanBinding(() -> !persistentSelection.equals(this.selection), this.selection, persistentSelection));
 
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
@@ -205,7 +204,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      */
     public MultiSelectionField<V> bind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
-        persistentSelection.bindBidirectional(selectionBinding);
+        selection.bindBidirectional(selectionBinding);
 
         return this;
     }
@@ -224,7 +223,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      */
     public MultiSelectionField<V> unbind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.unbindBidirectional(itemsBinding);
-        persistentSelection.unbindBidirectional(selectionBinding);
+        selection.unbindBidirectional(selectionBinding);
 
         return this;
     }
@@ -268,7 +267,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * {@inheritDoc}
      */
     boolean validateRequired() {
-        return !isRequired() || selection.size() > 0;
+        return !isRequired() || (isRequired() && selection.size() > 0);
     }
 
     /**
