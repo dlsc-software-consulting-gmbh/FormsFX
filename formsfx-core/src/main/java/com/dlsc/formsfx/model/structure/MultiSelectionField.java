@@ -24,16 +24,16 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleListViewControl;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class provides an implementation of a {@link MultiSelectionField}
@@ -56,6 +56,12 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * the ones that correspond to the field's type.
      */
     private final List<Validator<ObservableList<V>>> validators = new ArrayList<>();
+
+    /**
+     * This listener updates the field when the external binding changes.
+     */
+    private final InvalidationListener externalBindingListener = (observable) ->
+        selection.setAll(((ListProperty<V>) observable).getValue());
 
     /**
      * The constructor of {@code MultiSelectionField}.
@@ -89,11 +95,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
 
-        this.selection.addListener((observable, oldValue, newValue) -> {
-            if (validate()) {
-                this.selection.setValue(newValue);
-            }
-        });
+        this.selection.addListener((observable, oldValue, newValue) -> validate());
 
         // Clear the current selection and persistent selection whenever new
         // items are added. The selection is built back up if it is passed along
@@ -205,7 +207,8 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      */
     public MultiSelectionField<V> bind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
-        persistentSelection.bindBidirectional(selectionBinding);
+        selection.bindBidirectional(selectionBinding);
+        selectionBinding.addListener(externalBindingListener);
 
         return this;
     }
@@ -224,7 +227,8 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      */
     public MultiSelectionField<V> unbind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.unbindBidirectional(itemsBinding);
-        persistentSelection.unbindBidirectional(selectionBinding);
+        selection.unbindBidirectional(selectionBinding);
+        selectionBinding.removeListener(externalBindingListener);
 
         return this;
     }

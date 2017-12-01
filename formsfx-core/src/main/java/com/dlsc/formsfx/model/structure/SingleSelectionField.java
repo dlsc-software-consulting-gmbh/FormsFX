@@ -24,6 +24,7 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleComboBoxControl;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -57,6 +58,12 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
     private final List<Validator<V>> validators = new ArrayList<>();
 
     /**
+     * This listener updates the field when the external binding changes.
+     */
+    private final InvalidationListener externalBindingListener = (observable) ->
+        selection.set(((ObjectProperty<V>) observable).getValue());
+
+    /**
      * The constructor of {@code SingleSelectionField}.
      *
      * @param items
@@ -85,11 +92,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
 
-        this.selection.addListener((observable, oldValue, newValue) -> {
-            if (validate()) {
-                this.selection.setValue(newValue);
-            }
-        });
+        this.selection.addListener((observable, oldValue, newValue) -> validate());
 
         // Clear the current selection and persistent selection whenever new
         // items are added. The selection is built back up if it is passed along
@@ -202,7 +205,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      */
     public SingleSelectionField<V> bind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
-        persistentSelection.bindBidirectional(selectionBinding);
+        selection.bindBidirectional(selectionBinding);
+        selectionBinding.addListener(externalBindingListener);
 
         return this;
     }
@@ -221,7 +225,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      */
     public SingleSelectionField<V> unbind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.unbindBidirectional(itemsBinding);
-        persistentSelection.unbindBidirectional(selectionBinding);
+        selection.unbindBidirectional(selectionBinding);
+        selectionBinding.removeListener(externalBindingListener);
 
         return this;
     }
