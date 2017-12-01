@@ -85,7 +85,11 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
 
-        this.selection.addListener((observable, oldValue, newValue) -> validate());
+        this.selection.addListener((observable, oldValue, newValue) -> {
+            if (validate()) {
+                this.selection.setValue(newValue);
+            }
+        });
 
         // Clear the current selection and persistent selection whenever new
         // items are added. The selection is built back up if it is passed along
