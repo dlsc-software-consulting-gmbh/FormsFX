@@ -24,16 +24,14 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleComboBoxControl;
-import javafx.beans.InvalidationListener;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * This class provides an implementation of a {@link SelectionField} allowing
@@ -56,12 +54,6 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * the ones that correspond to the field's type.
      */
     private final List<Validator<V>> validators = new ArrayList<>();
-
-    /**
-     * This listener updates the field when the external binding changes.
-     */
-    private final InvalidationListener externalBindingListener = (observable) ->
-        selection.set(((ObjectProperty<V>) observable).getValue());
 
     /**
      * The constructor of {@code SingleSelectionField}.
@@ -206,7 +198,6 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
     public SingleSelectionField<V> bind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
         selection.bindBidirectional(selectionBinding);
-        selectionBinding.addListener(externalBindingListener);
 
         return this;
     }
@@ -226,7 +217,6 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
     public SingleSelectionField<V> unbind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
         items.unbindBidirectional(itemsBinding);
         selection.unbindBidirectional(selectionBinding);
-        selectionBinding.removeListener(externalBindingListener);
 
         return this;
     }

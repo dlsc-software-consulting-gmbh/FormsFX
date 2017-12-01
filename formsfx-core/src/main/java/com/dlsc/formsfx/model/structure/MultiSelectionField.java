@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
@@ -56,12 +55,6 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * the ones that correspond to the field's type.
      */
     private final List<Validator<ObservableList<V>>> validators = new ArrayList<>();
-
-    /**
-     * This listener updates the field when the external binding changes.
-     */
-    private final InvalidationListener externalBindingListener = (observable) ->
-        selection.setAll(((ListProperty<V>) observable).getValue());
 
     /**
      * The constructor of {@code MultiSelectionField}.
@@ -208,7 +201,6 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
     public MultiSelectionField<V> bind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.bindBidirectional(itemsBinding);
         selection.bindBidirectional(selectionBinding);
-        selectionBinding.addListener(externalBindingListener);
 
         return this;
     }
@@ -228,7 +220,6 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
     public MultiSelectionField<V> unbind(ListProperty<V> itemsBinding, ListProperty<V> selectionBinding) {
         items.unbindBidirectional(itemsBinding);
         selection.unbindBidirectional(selectionBinding);
-        selectionBinding.removeListener(externalBindingListener);
 
         return this;
     }
