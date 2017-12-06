@@ -41,11 +41,11 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
      * - SPACING is used to set the spacing of the section as well as the
      *   spacing for vertical/horizontal gaps between controls.
      */
-    final int SPACING = 10;
+    protected final int SPACING = 10;
 
-    GridPane grid;
+    protected GridPane grid;
 
-    V element;
+    protected V element;
 
     /**
      *

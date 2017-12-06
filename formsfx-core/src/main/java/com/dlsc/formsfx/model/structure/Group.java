@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class Group {
 
-    final List<Field> fields = new ArrayList<>();
+    protected final List<Field> fields = new ArrayList<>();
 
     /**
      * The group acts as a proxy for its contained fields' {@code changed}
@@ -52,7 +52,7 @@ public class Group {
      * The translation service is passed down from the containing form. It
      * is used to translate all translatable values of the field.
      */
-    TranslationService translationService;
+    protected TranslationService translationService;
 
     /**
      * Internal constructor for the {@code Group} class. To create new
@@ -64,7 +64,7 @@ public class Group {
      *              A varargs list of fields that are contained in this
      *              group.
      */
-    Group(Field... fields) {
+    protected Group(Field... fields) {
         Collections.addAll(this.fields, fields);
 
         // If any of the fields are marked as changed, the group is updated
