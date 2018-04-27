@@ -18,7 +18,7 @@ To use this framework as part of your Maven build simply add the jcentral reposi
 <dependency>
   <groupId>com.dlsc.formsfx</groupId>
   <artifactId>formsfx-core</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
