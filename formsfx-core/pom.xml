@@ -7,12 +7,19 @@
     <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx-core</artifactId>
     <packaging>jar</packaging>
+    <version>1.2.1</version>
 
-    <parent>
-        <groupId>com.dlsc.formsfx</groupId>
-        <artifactId>formsfx</artifactId>
-        <version>1.2</version>
-    </parent>
+    <name>FormsFX</name>
+    <description>A framework for quickly creating form-based UIs.</description>
+    <url>https://github.com/dlemmermann/formsfx</url>
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://github.com/dlemmermann/formsfx</url>
+    </scm>
 
     <distributionManagement>
         <repository>
@@ -21,6 +28,14 @@
             <url>https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1</url>
         </repository>
     </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>Dirk Lemmermann</name>
+            <url>http://www.dlsc.com</url>
+            <organization>DLSC Software &amp; Consulting</organization>
+        </developer>
+    </developers>
 
     <build>
         <plugins>
