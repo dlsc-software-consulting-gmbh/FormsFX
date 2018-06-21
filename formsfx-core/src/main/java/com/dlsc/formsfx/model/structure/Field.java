@@ -172,6 +172,30 @@ public abstract class Field<F extends Field> {
     }
 
     /**
+     * Creates a new {@link PasswordField} with the given default value.
+     *
+     * @param defaultValue
+     *              The initial value and persistent value of the field.
+     *
+     * @return Returns a new {@link PasswordField}.
+     */
+    public static PasswordField ofPasswordType(String defaultValue) {
+        return new PasswordField(new SimpleStringProperty(defaultValue), new SimpleStringProperty(defaultValue));
+    }
+
+    /**
+     * Creates a new {@link PasswordField} with the given property.
+     *
+     * @param binding
+     *          The property from the model to be bound with.
+     *
+     * @return Returns a new {@link PasswordField}.
+     */
+    public static PasswordField ofPasswordType(StringProperty binding) {
+        return new PasswordField(new SimpleStringProperty(binding.getValue()), new SimpleStringProperty(binding.getValue())).bind(binding);
+    }
+
+    /**
      * Creates a new {@link StringField} with the given default value.
      *
      * @param defaultValue

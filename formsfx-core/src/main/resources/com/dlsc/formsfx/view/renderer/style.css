@@ -9,6 +9,7 @@
 }
 
 .simple-control .text-field,
+.simple-control .password-field,
 .simple-control .text-area {
     -fx-padding: 5px;
 }
@@ -92,10 +93,13 @@
 
 /*noinspection CssInvalidPseudoSelector*/
 .simple-control:changed .text-field,
+.simple-control:changed .password-field,
 .simple-control:changed .text-area,
 .simple-control:required .text-field,
+.simple-control:required .password-field,
 .simple-control:required .text-area,
 .simple-control:invalid .text-field,
+.simple-control:invalid .password-field,
 .simple-control:invalid .text-area,
 .simple-select-control:changed .arrow-button,
 .simple-select-control:required .arrow-button,
@@ -124,6 +128,7 @@
 
 /*noinspection CssInvalidPseudoSelector*/
 .simple-control:required .text-field,
+.simple-control:required .password-field,
 .simple-control:required .text-area,
 .simple-boolean-control:required > VBox,
 .simple-select-control:required .arrow-button,
@@ -135,6 +140,7 @@
 
 /*noinspection CssInvalidPseudoSelector*/
 .simple-control:changed .text-field,
+.simple-control:changed .password-field,
 .simple-control:changed .text-area,
 .simple-boolean-control:changed > VBox,
 .simple-select-control:changed .arrow-button,
@@ -146,6 +152,7 @@
 
 /*noinspection CssInvalidPseudoSelector*/
 .simple-control:invalid .text-field,
+.simple-control:invalid .password-field,
 .simple-control:invalid .text-area,
 .simple-boolean-control:invalid > VBox,
 .simple-select-control:invalid .arrow-button,
