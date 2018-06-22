@@ -141,7 +141,12 @@ public final class DemoModel {
                                 .render(new SimpleCheckBoxControl<>()),
                         Field.ofMultiSelectionType(country.allCitiesProperty(), country.germanCitiesProperty())
                                 .label("german_cities_label")
+                                .span(ColSpan.HALF),
+                        Field.ofPasswordType("secret")
+                                .label("secret_label")
+                                .required("required_error_message")
                                 .span(ColSpan.HALF)
+                                .validate(StringLengthValidator.between(1, 10, "secret_error_message"))
                 ).title("cities_and_population_label")
         ).title("form_label")
                 .i18n(rbs);

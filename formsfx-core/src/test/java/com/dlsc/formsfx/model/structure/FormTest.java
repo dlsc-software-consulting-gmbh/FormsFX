@@ -58,11 +58,14 @@ public class FormTest {
                 Section.of(
                         Field.ofIntegerType(1),
                         Field.ofDoubleType(1.0)
+                ),
+                Section.of(
+                        Field.ofPasswordType("")
                 )
         );
 
-        Assert.assertEquals(5, f.getFields().size());
-        Assert.assertEquals(3, f.getGroups().size());
+        Assert.assertEquals(6, f.getFields().size());
+        Assert.assertEquals(4, f.getGroups().size());
     }
 
     @Test
