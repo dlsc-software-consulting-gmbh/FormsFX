@@ -50,6 +50,10 @@ public class Section extends Group {
      * A group can optionally be collapsed.
      */
     private final BooleanProperty collapsed = new SimpleBooleanProperty(false);
+    /**
+     * Section is collapsible by default
+     */
+    private final BooleanProperty collapsible = new SimpleBooleanProperty(true);
 
     /**
      * {@inheritDoc}
@@ -141,4 +145,22 @@ public class Section extends Group {
         return title;
     }
 
+    /**
+     * Changes the collapsible state on a section.
+     *
+     * @param newValue
+     *              The new value for the collapsible state.
+     */
+    public Section collapsible(boolean newValue) {
+        this.collapsible.set(newValue);
+        return this;
+    }
+
+    public boolean isCollapsible() {
+        return collapsible.get();
+    }
+
+    public BooleanProperty collapsibleProperty() {
+        return collapsible;
+    }
 }
