@@ -78,6 +78,8 @@ public class FormRenderer extends VBox implements ViewMixin {
      */
     @Override
     public void layoutParts() {
+        getStyleClass().add("formsfx-form");
+
         setPadding(new Insets(10));
         getChildren().addAll(sections);
     }

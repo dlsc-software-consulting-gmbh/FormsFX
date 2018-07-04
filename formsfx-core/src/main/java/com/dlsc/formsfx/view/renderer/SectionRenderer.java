@@ -59,6 +59,9 @@ public class SectionRenderer extends GroupRendererBase<Section> {
     @Override
     public void layoutParts() {
         super.layoutParts();
+
+        getStyleClass().add("formsfx-section");
+
         titledPane.setContent(grid);
         getChildren().add(titledPane);
 
