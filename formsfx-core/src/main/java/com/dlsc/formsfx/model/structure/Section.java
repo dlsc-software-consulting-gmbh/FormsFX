@@ -90,7 +90,7 @@ public class Section extends Group {
      *
      * @return Returns the current group to allow for chaining.
      */
-    public Group title(String newValue) {
+    public Section title(String newValue) {
         if (isI18N()) {
             titleKey.set(newValue);
         } else {
@@ -125,8 +125,9 @@ public class Section extends Group {
      * @param newValue
      *              The new value for the collapsed state.
      */
-    public void collapse(boolean newValue) {
+    public Section collapse(boolean newValue) {
         collapsed.setValue(newValue);
+        return this;
     }
 
     public BooleanProperty collapsedProperty() {
