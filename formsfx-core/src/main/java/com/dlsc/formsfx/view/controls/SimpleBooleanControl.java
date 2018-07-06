@@ -21,8 +21,11 @@ package com.dlsc.formsfx.view.controls;
  */
 
 import com.dlsc.formsfx.model.structure.BooleanField;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 /**
@@ -66,10 +69,22 @@ public class SimpleBooleanControl extends SimpleControl<BooleanField> {
     public void layoutParts() {
         super.layoutParts();
 
+        int columns = field.getSpan();
         container.getChildren().add(checkBox);
 
-        add(fieldLabel, 0,0,2,1);
-        add(container, 2, 0, field.getSpan() - 2,1);
+        Node labelDescription = field.getLabelDescription();
+        Node valueDescription = field.getValueDescription();
+
+        add(fieldLabel, 0, 0, 2, 1);
+        if (labelDescription != null) {
+            GridPane.setValignment(labelDescription, VPos.TOP);
+            add(labelDescription, 0, 1, 2, 1);
+        }
+        add(container, 2, 0, columns - 2, 1);
+        if (valueDescription != null) {
+            GridPane.setValignment(valueDescription, VPos.TOP);
+            add(valueDescription, 2, 1, columns - 2, 1);
+        }
     }
 
     /**

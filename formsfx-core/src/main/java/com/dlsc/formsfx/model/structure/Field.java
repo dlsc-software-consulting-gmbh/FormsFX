@@ -38,6 +38,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +124,20 @@ public abstract class Field<F extends Field> {
     final ListProperty<String> errorMessageKeys = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     /**
+     * Additional descriptions for the field's label and value are stored in these properties.
+     *
+     * These properties are translatable if a {@link TranslationService} is set on
+     * the containing form.
+     */
+    private Node labelDescription;
+    private Node valueDescription;
+    private final StringProperty labelDescriptionKey = new SimpleStringProperty("");
+    private final StringProperty valueDescriptionKey = new SimpleStringProperty("");
+
+    private static final String LABEL_DESCRIPTION_STYLE_CLASS = "field-label-description";
+    private static final String VALUE_DESCRIPTION_STYLE_CLASS = "field-value-description";
+
+    /**
      * The translation service is passed down from the containing section. It
      * is used to translate all translatable values of the field.
      */
@@ -159,6 +176,10 @@ public abstract class Field<F extends Field> {
         tooltipKey.addListener((observable, oldValue, newValue) -> tooltip.setValue(translationService.translate(newValue)));
 
         placeholderKey.addListener((observable, oldValue, newValue) -> placeholder.setValue(translationService.translate(newValue)));
+
+        labelDescriptionKey.addListener((observable, oldValue, newValue) -> labelDescription = asLabel(translationService.translate(newValue), LABEL_DESCRIPTION_STYLE_CLASS));
+
+        valueDescriptionKey.addListener((observable, oldValue, newValue) -> valueDescription = asLabel(translationService.translate(newValue), VALUE_DESCRIPTION_STYLE_CLASS));
 
         requiredErrorKey.addListener((observable, oldValue, newValue) -> validate());
 
@@ -452,6 +473,89 @@ public abstract class Field<F extends Field> {
     }
 
     /**
+     * Sets the label description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the label description property.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F labelDescription(Node newValue) {
+        labelDescription = newValue;
+        if (labelDescription != null) {
+            labelDescription.getStyleClass().add(LABEL_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    /**
+     * Sets the label description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the label description property,
+     *              wrapped with a {@code Text}.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F labelDescription(String newValue) {
+        if(isI18N()) {
+            labelDescriptionKey.set(newValue);
+        } else if (newValue != null) {
+            labelDescription = asLabel(newValue, LABEL_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    /**
+     * Sets the value description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the field description property.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F valueDescription(Node newValue) {
+        valueDescription = newValue;
+        if (valueDescription != null) {
+            valueDescription.getStyleClass().add(VALUE_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    /**
+     * Sets the value description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the field description property,
+     *              wrapped with a {@code Text}.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F valueDescription(String newValue) {
+        if(isI18N()) {
+            valueDescriptionKey.set(newValue);
+        } else if (newValue != null) {
+            valueDescription = asLabel(newValue, VALUE_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    private Label asLabel(String text, String styleClass) {
+        Label label = new Label(text);
+        label.setWrapText(true);
+        label.getStyleClass().add(styleClass);
+        return label;
+    }
+
+    /**
      * Sets the tooltip property of the current field.
      *
      * @param newValue
@@ -589,6 +693,8 @@ public abstract class Field<F extends Field> {
         updateElement(tooltip, tooltipKey);
         updateElement(placeholder, placeholderKey);
         updateElement(requiredError, requiredErrorKey);
+        updateElement(labelDescription, labelDescriptionKey);
+        updateElement(valueDescription, valueDescriptionKey);
 
         // Validation results are handled separately as they use a somewhat
         // more complex structure.
@@ -615,6 +721,35 @@ public abstract class Field<F extends Field> {
             keyProperty.setValue(displayProperty.get());
         } else if (!keyProperty.get().isEmpty()) {
             displayProperty.setValue(translationService.translate(keyProperty.get()));
+        }
+    }
+
+    /**
+     * Updates a displayable field property to include translated text.
+     *
+     * @param node
+     *              The property that is displayed to the user.
+     * @param keyProperty
+     *              The internal property that holds the translation key.
+     */
+    void updateElement(Node node, StringProperty keyProperty) {
+
+        // If the key has not yet been set that means that the translation
+        // service was added for the first time. We can simply set the key
+        // to the value stored in the display property, the listener will
+        // then take care of the translation.
+
+        if (!(node instanceof Labeled)) {
+            // no automatic update
+            return;
+        }
+
+        Labeled labeled = (Labeled) node;
+
+        if ((keyProperty.get() == null || keyProperty.get().isEmpty()) && !labeled.getText().isEmpty()) {
+            keyProperty.setValue(labeled.getText());
+        } else if (!keyProperty.get().isEmpty()) {
+            labeled.setText(translationService.translate(keyProperty.get()));
         }
     }
 
@@ -723,4 +858,11 @@ public abstract class Field<F extends Field> {
         return errorMessages;
     }
 
+    public Node getLabelDescription() {
+        return labelDescription;
+    }
+
+    public Node getValueDescription() {
+        return valueDescription;
+    }
 }

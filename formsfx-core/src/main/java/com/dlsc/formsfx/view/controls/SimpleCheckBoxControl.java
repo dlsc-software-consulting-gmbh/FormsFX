@@ -21,8 +21,11 @@ package com.dlsc.formsfx.view.controls;
  */
 
 import com.dlsc.formsfx.model.structure.MultiSelectionField;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -73,8 +76,19 @@ public class SimpleCheckBoxControl<V> extends SimpleControl<MultiSelectionField<
 
         box.setSpacing(5);
 
-        add(fieldLabel, 0,0,2,1);
-        add(box, 2, 0, columns - 2,1);
+        Node labelDescription = field.getLabelDescription();
+        Node valueDescription = field.getValueDescription();
+
+        add(fieldLabel, 0, 0, 2, 1);
+        if (labelDescription != null) {
+            GridPane.setValignment(labelDescription, VPos.TOP);
+            add(labelDescription, 0, 1, 2, 1);
+        }
+        add(box, 2, 0, columns - 2, 1);
+        if (valueDescription != null) {
+            GridPane.setValignment(valueDescription, VPos.TOP);
+            add(valueDescription, 2, 1, columns - 2, 1);
+        }
     }
 
     /**

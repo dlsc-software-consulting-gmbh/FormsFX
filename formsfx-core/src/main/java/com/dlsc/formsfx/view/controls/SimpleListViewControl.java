@@ -22,9 +22,12 @@ package com.dlsc.formsfx.view.controls;
 
 import com.dlsc.formsfx.model.structure.MultiSelectionField;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.layout.GridPane;
 
 /**
  * This class provides the base implementation for a simple control to edit
@@ -82,8 +85,19 @@ public class SimpleListViewControl<V> extends SimpleControl<MultiSelectionField<
 
         listView.setPrefHeight(200);
 
-        add(fieldLabel, 0,0,2,1);
+        Node labelDescription = field.getLabelDescription();
+        Node valueDescription = field.getValueDescription();
+
+        add(fieldLabel, 0, 0, 2, 1);
+        if (labelDescription != null) {
+            GridPane.setValignment(labelDescription, VPos.TOP);
+            add(labelDescription, 0, 1, 2, 1);
+        }
         add(listView, 2, 0, columns - 2, 1);
+        if (valueDescription != null) {
+            GridPane.setValignment(valueDescription, VPos.TOP);
+            add(valueDescription, 2, 1, columns - 2, 1);
+        }
     }
 
     /**
