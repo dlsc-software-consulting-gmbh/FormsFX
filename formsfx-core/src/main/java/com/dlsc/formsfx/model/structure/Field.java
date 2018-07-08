@@ -20,6 +20,7 @@ package com.dlsc.formsfx.model.structure;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import com.dlsc.formsfx.view.controls.SimpleControl;
@@ -38,10 +39,15 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -127,6 +133,8 @@ public abstract class Field<F extends Field> {
     TranslationService translationService;
 
     SimpleControl<F> renderer;
+
+    protected final Map<EventType<FieldEvent>,List<EventHandler<? super FieldEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
     /**
      * With the continuous binding mode, values are always directly persisted
@@ -723,4 +731,65 @@ public abstract class Field<F extends Field> {
         return errorMessages;
     }
 
+    /**
+     * Registers an event handler to this field. The handler is called when the
+     * field receives an {@code Event} of the specified type during the bubbling
+     * phase of event delivery.
+     *
+     * @param eventType    the type of the events to receive by the handler
+     * @param eventHandler the handler to register
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Field addEventHandler(EventType<FieldEvent> eventType, EventHandler<? super FieldEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        this.eventHandlers.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>()).add(eventHandler);
+
+        return this;
+    }
+
+    /**
+     * Unregisters a previously registered event handler from this field. One
+     * handler might have been registered for different event types, so the
+     * caller needs to specify the particular event type from which to
+     * unregister the handler.
+     *
+     * @param eventType    the event type from which to unregister
+     * @param eventHandler the handler to unregister
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Field removeEventHandler(EventType<FieldEvent> eventType, EventHandler<? super FieldEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        List<EventHandler<? super FieldEvent>> list = this.eventHandlers.get(eventType);
+        if (list != null) {
+            list.remove(eventHandler);
+        }
+
+        return this;
+    }
+
+    protected void fireEvent(FieldEvent event) {
+        List<EventHandler<? super FieldEvent>> list = this.eventHandlers.get(event.getEventType());
+        if (list == null) {
+            return;
+        }
+        for (EventHandler<? super FieldEvent> eventHandler : list) {
+            if (!event.isConsumed()) {
+                eventHandler.handle(event);
+            }
+        }
+    }
 }

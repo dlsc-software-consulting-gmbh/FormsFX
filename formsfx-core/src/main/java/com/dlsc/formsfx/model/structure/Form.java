@@ -20,6 +20,7 @@ package com.dlsc.formsfx.model.structure;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.event.FormEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import javafx.beans.property.BooleanProperty;
@@ -28,10 +29,15 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -71,6 +77,8 @@ public class Form {
      */
     private final ObjectProperty<TranslationService> translationService = new SimpleObjectProperty<>();
     private final Runnable localeChangeListener = this::translate;
+
+    private final Map<EventType<FormEvent>,List<EventHandler<? super FormEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
     /**
      * Internal constructor for the {@code Form} class. To create new
@@ -211,6 +219,8 @@ public class Form {
         }
 
         groups.forEach(Group::persist);
+
+        fireEvent(FormEvent.formPersistedEvent(this));
     }
 
     /**
@@ -224,6 +234,8 @@ public class Form {
         }
 
         groups.forEach(Group::reset);
+
+        fireEvent(FormEvent.formResetEvent(this));
     }
 
     /**
@@ -299,4 +311,65 @@ public class Form {
         return translationService.get() != null;
     }
 
+    /**
+     * Registers an event handler to this form. The handler is called when the
+     * form receives an {@code Event} of the specified type during the bubbling
+     * phase of event delivery.
+     *
+     * @param eventType    the type of the events to receive by the handler
+     * @param eventHandler the handler to register
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Form addEventHandler(EventType<FormEvent> eventType, EventHandler<? super FormEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        this.eventHandlers.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>()).add(eventHandler);
+
+        return this;
+    }
+
+    /**
+     * Unregisters a previously registered event handler from this form. One
+     * handler might have been registered for different event types, so the
+     * caller needs to specify the particular event type from which to
+     * unregister the handler.
+     *
+     * @param eventType    the event type from which to unregister
+     * @param eventHandler the handler to unregister
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Form removeEventHandler(EventType<FormEvent> eventType, EventHandler<? super FormEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        List<EventHandler<? super FormEvent>> list = this.eventHandlers.get(eventType);
+        if (list != null) {
+            list.remove(eventHandler);
+        }
+
+        return this;
+    }
+
+    protected void fireEvent(FormEvent event) {
+        List<EventHandler<? super FormEvent>> list = this.eventHandlers.get(event.getEventType());
+        if (list == null) {
+            return;
+        }
+        for (EventHandler<? super FormEvent> eventHandler : list) {
+            if (!event.isConsumed()) {
+                eventHandler.handle(event);
+            }
+        }
+    }
 }
