@@ -29,7 +29,7 @@ import javafx.beans.property.StringProperty;
 /**
  * A section is a kind of group with more options. It can have a title and can
  * be collapsed by the user. Sections represent a more semantically heavy
- * grouping of fields, compared to groups.
+ * grouping of elements, compared to groups.
  *
  * @author Sacha Schmid
  * @author Rinesch Murugathas
@@ -38,7 +38,7 @@ public class Section extends Group {
 
     /**
      * The title acts as a description for the group. It is always visible to
-     * the user and tells them how the contained fields are grouped.
+     * the user and tells them how the contained elements are grouped.
      *
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
@@ -58,8 +58,8 @@ public class Section extends Group {
     /**
      * {@inheritDoc}
      */
-    private Section(Field... fields) {
-        super(fields);
+    private Section(Element... elements) {
+        super(elements);
 
         // Whenever the title's key changes, update the displayed value based
         // on the new translation.
@@ -68,15 +68,15 @@ public class Section extends Group {
     }
 
     /**
-     * Creates a new section containing the given fields.
+     * Creates a new section containing the given elements.
      *
-     * @param fields
-     *              The fields to be included in the section.
+     * @param elements
+     *              The elements to be included in the section.
      *
      * @return Returns a new {@code Section}.
      */
-    public static Section of(Field... fields) {
-        return new Section(fields);
+    public static Section of(Element... elements) {
+        return new Section(elements);
     }
 
     /**
@@ -116,7 +116,10 @@ public class Section extends Group {
             title.setValue(translationService.translate(titleKey.get()));
         }
 
-        fields.forEach(f -> f.translate(translationService));
+        elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.translate(translationService));
     }
 
     /**

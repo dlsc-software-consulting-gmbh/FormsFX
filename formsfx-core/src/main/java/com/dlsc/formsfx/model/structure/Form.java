@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A form is the containing unit for sections and fields and is used to bring
+ * A form is the containing unit for sections and elements and is used to bring
  * structure to form data. It also acts as a proxy to some properties of the
  * contained data, such as validity or changes.
  *
@@ -201,7 +201,7 @@ public class Form {
     }
 
     /**
-     * Persists the values for all fields contained in this form's groups.
+     * Persists the values for all elements contained in this form's groups.
      *
      * @see Field::reset
      */
@@ -214,7 +214,7 @@ public class Form {
     }
 
     /**
-     * Resets the values for all fields contained in this form's groups.
+     * Resets the values for all elements contained in this form's groups.
      *
      * @see Field::reset
      */
@@ -256,11 +256,20 @@ public class Form {
         return groups;
     }
 
-    public List<Field> getFields() {
+    public List<Element> getElements() {
         return groups.stream()
-                .map(Group::getFields)
+                .map(Group::getElements)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+    }
+
+    public List<Field> getFields() {
+        return groups.stream()
+            .map(Group::getElements)
+            .flatMap(List::stream)
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .collect(Collectors.toList());
     }
 
     public boolean hasChanged() {

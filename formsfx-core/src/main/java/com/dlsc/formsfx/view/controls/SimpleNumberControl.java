@@ -28,7 +28,7 @@ import javafx.scene.layout.StackPane;
 
 /**
  * This class provides the base implementation for a simple control to edit
- * numerical fields.
+ * numerical elements.
  *
  * @author Rinesch Murugathas
  * @author Sacha Schmid

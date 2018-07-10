@@ -188,7 +188,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
 
     /**
      * Binds the given items and selection property with the corresponding
-     * fields.
+     * elements.
      *
      * @param itemsBinding
      *          The items property to be bound with.
@@ -207,7 +207,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
 
     /**
      * Unbinds the given items and selection property with the corresponding
-     * fields.
+     * elements.
      *
      * @param itemsBinding
      *          The items property to be unbound with.
@@ -239,7 +239,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * Stores the field's current selection in its persistent selection. This
      * stores the user's changes in the model.
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
@@ -251,7 +251,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * Sets the field's current selection to its persistent selection, thus
      * resetting any changes made by the user.
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
