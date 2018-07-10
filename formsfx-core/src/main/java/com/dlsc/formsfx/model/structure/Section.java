@@ -43,17 +43,17 @@ public class Section extends Group {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty titleKey = new SimpleStringProperty("");
-    private final StringProperty title = new SimpleStringProperty("");
+    protected final StringProperty titleKey = new SimpleStringProperty("");
+    protected final StringProperty title = new SimpleStringProperty("");
 
     /**
      * A group can optionally be collapsed.
      */
-    private final BooleanProperty collapsed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty collapsed = new SimpleBooleanProperty(false);
     /**
      * Section is collapsible by default
      */
-    private final BooleanProperty collapsible = new SimpleBooleanProperty(true);
+    protected final BooleanProperty collapsible = new SimpleBooleanProperty(true);
 
     /**
      * {@inheritDoc}
@@ -103,7 +103,7 @@ public class Section extends Group {
     /**
      * {@inheritDoc}
      */
-    void translate(TranslationService newValue) {
+    protected void translate(TranslationService newValue) {
         translationService = newValue;
 
         if (!isI18N()) {

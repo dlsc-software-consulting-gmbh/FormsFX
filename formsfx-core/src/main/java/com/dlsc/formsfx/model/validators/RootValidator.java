@@ -30,7 +30,7 @@ abstract class RootValidator<T> implements Validator<T> {
 
     private String errorMessage;
 
-    RootValidator(String errorMessage) {
+    protected RootValidator(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 
@@ -42,7 +42,7 @@ abstract class RootValidator<T> implements Validator<T> {
      *
      * @return Returns a new ValidationResult containing result and message.
      */
-    ValidationResult createResult(boolean result) {
+    protected ValidationResult createResult(boolean result) {
         return new ValidationResult(result, errorMessage);
     }
 
