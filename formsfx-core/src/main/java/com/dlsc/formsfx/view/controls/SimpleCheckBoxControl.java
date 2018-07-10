@@ -43,9 +43,9 @@ public class SimpleCheckBoxControl<V> extends SimpleControl<MultiSelectionField<
      * - The checkboxes list contains all the checkboxes to display.
      * - The box is a VBox holding all box.
      */
-    private Label fieldLabel;
-    private final List<CheckBox> checkboxes = new ArrayList<>();
-    private VBox box;
+    protected Label fieldLabel;
+    protected final List<CheckBox> checkboxes = new ArrayList<>();
+    protected VBox box;
 
     /**
      * {@inheritDoc}
@@ -129,7 +129,7 @@ public class SimpleCheckBoxControl<V> extends SimpleControl<MultiSelectionField<
      * This method creates box and adds them to checkboxes and is
      * used when the itemsProperty on the field changes.
      */
-    private void createCheckboxes() {
+    protected void createCheckboxes() {
         box.getChildren().clear();
         checkboxes.clear();
 
@@ -148,7 +148,7 @@ public class SimpleCheckBoxControl<V> extends SimpleControl<MultiSelectionField<
     /**
      * Sets up bindings for all checkboxes.
      */
-    private void setupCheckboxBindings() {
+    protected void setupCheckboxBindings() {
         for (CheckBox checkbox : checkboxes) {
             checkbox.disableProperty().bind(field.editableProperty().not());
         }
@@ -157,7 +157,7 @@ public class SimpleCheckBoxControl<V> extends SimpleControl<MultiSelectionField<
     /**
      * Sets up event handlers for all checkboxes.
      */
-    private void setupCheckboxEventHandlers() {
+    protected void setupCheckboxEventHandlers() {
         for (int i = 0; i < checkboxes.size(); i++) {
             final int j = i;
 

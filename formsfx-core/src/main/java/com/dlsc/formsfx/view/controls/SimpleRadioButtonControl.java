@@ -45,10 +45,10 @@ public class SimpleRadioButtonControl<V> extends SimpleControl<SingleSelectionFi
      * - The toggleGroup defines the group for the radio buttons.
      * - The box is a VBox holding all radio buttons.
      */
-    private Label fieldLabel;
-    private final List<RadioButton> radioButtons = new ArrayList<>();
-    private ToggleGroup toggleGroup;
-    private VBox box;
+    protected Label fieldLabel;
+    protected final List<RadioButton> radioButtons = new ArrayList<>();
+    protected ToggleGroup toggleGroup;
+    protected VBox box;
 
     /**
      * {@inheritDoc}
@@ -131,7 +131,7 @@ public class SimpleRadioButtonControl<V> extends SimpleControl<SingleSelectionFi
      * This method creates radio buttons and adds them to radioButtons
      * and is used when the itemsProperty on the field changes.
      */
-    private void createRadioButtons() {
+    protected void createRadioButtons() {
         box.getChildren().clear();
         radioButtons.clear();
 
@@ -154,7 +154,7 @@ public class SimpleRadioButtonControl<V> extends SimpleControl<SingleSelectionFi
     /**
      * Sets up bindings for all radio buttons.
      */
-    private void setupRadioButtonBindings() {
+    protected void setupRadioButtonBindings() {
         for (RadioButton radio : radioButtons) {
             radio.disableProperty().bind(field.editableProperty().not());
         }
@@ -163,7 +163,7 @@ public class SimpleRadioButtonControl<V> extends SimpleControl<SingleSelectionFi
     /**
      * Sets up bindings for all radio buttons.
      */
-    private void setupRadioButtonEventHandlers() {
+    protected void setupRadioButtonEventHandlers() {
         for (int i = 0; i < radioButtons.size(); i++) {
             final int j = i;
             radioButtons.get(j).setOnAction(event -> field.select(j));

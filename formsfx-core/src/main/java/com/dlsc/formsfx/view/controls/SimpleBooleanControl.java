@@ -40,9 +40,9 @@ public class SimpleBooleanControl extends SimpleControl<BooleanField> {
      * - checkBox is the editable checkbox to set user input.
      * - container holds the checkbox so that it can be styled properly.
      */
-    private Label fieldLabel;
-    private CheckBox checkBox;
-    private VBox container;
+    protected Label fieldLabel;
+    protected CheckBox checkBox;
+    protected VBox container;
 
     /**
      * {@inheritDoc}

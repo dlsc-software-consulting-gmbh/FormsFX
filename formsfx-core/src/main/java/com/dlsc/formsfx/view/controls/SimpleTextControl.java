@@ -42,7 +42,7 @@ public class SimpleTextControl extends SimpleControl<StringField> {
      * the readOnlyLabel over the editableField on the change of the
      * visibleProperty.
      */
-    private StackPane stack;
+    protected StackPane stack;
 
     /**
      * - The fieldLabel is the container that displays the label property of
@@ -50,10 +50,10 @@ public class SimpleTextControl extends SimpleControl<StringField> {
      * - The editableField allows users to modify the field's value.
      * - The readOnlyLabel displays the field's value if it is not editable.
      */
-    private TextField editableField;
-    private TextArea editableArea;
-    private Label readOnlyLabel;
-    private Label fieldLabel;
+    protected TextField editableField;
+    protected TextArea editableArea;
+    protected Label readOnlyLabel;
+    protected Label fieldLabel;
 
     /**
      * {@inheritDoc}

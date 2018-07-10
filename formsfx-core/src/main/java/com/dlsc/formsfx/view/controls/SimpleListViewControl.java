@@ -40,13 +40,13 @@ public class SimpleListViewControl<V> extends SimpleControl<MultiSelectionField<
      *   the field.
      * - The listView is the container that displays list values.
      */
-    private Label fieldLabel;
-    private ListView<String> listView = new ListView<>();
+    protected Label fieldLabel;
+    protected ListView<String> listView = new ListView<>();
 
     /**
      * The flag used for setting the selection properly.
      */
-    private boolean preventUpdate;
+    protected boolean preventUpdate;
 
     /**
      * {@inheritDoc}

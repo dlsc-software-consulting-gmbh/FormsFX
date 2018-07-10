@@ -40,7 +40,7 @@ public abstract class SimpleNumberControl<F extends DataField, D extends Number>
      * the {@code readOnlyLabel} over the {@code editableSpinner} on the change
      * of the {@code visibleProperty}.
      */
-    private StackPane stack;
+    protected StackPane stack;
 
     /**
      * - The fieldLabel is the container that displays the label property of
@@ -48,9 +48,9 @@ public abstract class SimpleNumberControl<F extends DataField, D extends Number>
      * - The editableSpinner is a Spinner for setting numerical values.
      * - The readOnlyLabel is the label to put over editableSpinner.
      */
-    private Label fieldLabel;
+    protected Label fieldLabel;
     protected Spinner<D> editableSpinner;
-    private Label readOnlyLabel;
+    protected Label readOnlyLabel;
 
     /**
      * {@inheritDoc}
