@@ -25,7 +25,10 @@ package com.dlsc.formsfx.model.util;
  *
  * @author Sacha Schmid
  * @author Rinesch Murugathas
+ * @deprecated Use {@code StringConverter} instead.
+ * @see javafx.util.StringConverter
  */
+@Deprecated
 public interface ValueTransformer<T> {
 
     T transform(String input);
