@@ -50,10 +50,15 @@ public class StringField extends DataField<StringProperty, String, StringField> 
     StringField(SimpleStringProperty valueProperty, SimpleStringProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
-        valueTransformer = String::valueOf;
+        stringConverter = new AbstractStringConverter<String>() {
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        };
         renderer = new SimpleTextControl();
 
-        userInput.set(String.valueOf(value.getValue()));
+        userInput.set(stringConverter.toString(value.getValue()));
     }
 
     /**
