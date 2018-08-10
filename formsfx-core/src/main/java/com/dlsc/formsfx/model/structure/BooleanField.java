@@ -23,6 +23,7 @@ package com.dlsc.formsfx.model.structure;
 import com.dlsc.formsfx.view.controls.SimpleBooleanControl;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.util.StringConverter;
 
 /**
  * This class provides an implementation of a {@link Field} containing a
@@ -46,10 +47,15 @@ public class BooleanField extends DataField<BooleanProperty, Boolean, BooleanFie
     protected BooleanField(SimpleBooleanProperty valueProperty, SimpleBooleanProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
-        valueTransformer = Boolean::parseBoolean;
+        stringConverter = new AbstractStringConverter<Boolean>() {
+            @Override
+            public Boolean fromString(String string) {
+                return Boolean.parseBoolean(string);
+            }
+        };
         renderer = new SimpleBooleanControl();
 
-        userInput.set(String.valueOf(value.getValue()));
+        userInput.set(stringConverter.toString(value.getValue()));
     }
 
     /**

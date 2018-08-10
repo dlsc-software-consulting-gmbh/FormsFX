@@ -47,10 +47,15 @@ public class IntegerField extends DataField<IntegerProperty, Integer, IntegerFie
     protected IntegerField(SimpleIntegerProperty valueProperty, SimpleIntegerProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
-        valueTransformer = Integer::parseInt;
+        stringConverter = new AbstractStringConverter<Integer>() {
+            @Override
+            public Integer fromString(String string) {
+                return Integer.parseInt(string);
+            }
+        };
         renderer = new SimpleIntegerControl();
 
-        userInput.set(String.valueOf(value.getValue()));
+        userInput.set(stringConverter.toString(value.getValue()));
     }
 
 }

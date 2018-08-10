@@ -47,9 +47,14 @@ public class PasswordField extends DataField<StringProperty, String, PasswordFie
     protected PasswordField(SimpleStringProperty valueProperty, SimpleStringProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
-        valueTransformer = String::valueOf;
+        stringConverter = new AbstractStringConverter<String>() {
+            @Override
+            public String fromString(String string) {
+                return string;
+            }
+        };
         renderer = new SimplePasswordControl();
 
-        userInput.set(String.valueOf(value.getValue()));
+        userInput.set(stringConverter.toString(value.getValue()));
     }
 }

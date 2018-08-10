@@ -46,10 +46,15 @@ public class DoubleField extends DataField<DoubleProperty, Double, DoubleField> 
     protected DoubleField(SimpleDoubleProperty valueProperty, SimpleDoubleProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
-        valueTransformer = Double::parseDouble;
+        stringConverter = new AbstractStringConverter<Double>() {
+            @Override
+            public Double fromString(String string) {
+                return Double.parseDouble(string);
+            }
+        };
         renderer = new SimpleDoubleControl();
 
-        userInput.set(String.valueOf(value.getValue()));
+        userInput.set(stringConverter.toString(value.getValue()));
     }
 
 }

@@ -31,6 +31,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.StringConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,8 +72,17 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * The value transformer is responsible for transforming the user input
      * string to the specific type of the field's value.
+     * @deprecated Use DataField#stringConverter instead.
      */
-    protected ValueTransformer<V> valueTransformer;
+    @Deprecated
+    ValueTransformer<V> valueTransformer;
+
+    protected StringConverter<V> stringConverter = new AbstractStringConverter<V>() {
+        @Override
+        public V fromString(String string) {
+            return null;
+        }
+    };
 
     /**
      * The format error is displayed when the value transformation fails.
@@ -86,7 +96,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * This listener updates the field when the external binding changes.
      */
-    protected final InvalidationListener externalBindingListener = (observable) -> userInput.setValue(((P) observable).getValue().toString());
+    private final InvalidationListener externalBindingListener = (observable) -> userInput.setValue(stringConverter.toString((V) ((P) observable).getValue()));
 
     /**
      * Internal constructor for the {@code DataField} class. To create new
@@ -113,7 +123,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
         // until Field::persist or Field::reset are called or the value is back
         // to the persistent value.
 
-        changed.bind(Bindings.createBooleanBinding(() -> !String.valueOf(persistentValue.getValue()).equals(userInput.getValue()), userInput, persistentValue));
+        changed.bind(Bindings.createBooleanBinding(() -> !stringConverter.toString((V) persistentValue.getValue()).equals(userInput.getValue()), userInput, persistentValue));
 
         // Whenever one of the translatable elements' keys change, update the
         // displayed value based on the new translation.
@@ -125,9 +135,70 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
 
         userInput.addListener((observable, oldValue, newValue) -> {
             if (validate()) {
-                value.setValue(valueTransformer.transform(newValue));
+                value.setValue(stringConverter.fromString(newValue));
             }
         });
+    }
+
+    protected static abstract class AbstractStringConverter<V> extends StringConverter<V> {
+        @Override
+        public String toString(V object) {
+            return String.valueOf(object);
+        }
+    }
+
+    private static class StringConverterAdapter<V> extends AbstractStringConverter<V> {
+        private final ValueTransformer<V> valueTransformer;
+
+        public StringConverterAdapter(ValueTransformer<V> valueTransformer) {
+            this.valueTransformer = valueTransformer;
+        }
+
+        @Override
+        public V fromString(String string) {
+            return valueTransformer.transform(string);
+        }
+    }
+
+    /**
+     * Sets the string converter for the current field.
+     *
+     * @param newValue
+     *              The string converter that transforms the user input string to
+     *              the field's underlying value and back.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F format(StringConverter<V> newValue) {
+        stringConverter = newValue;
+        validate();
+        return (F) this;
+    }
+
+    /**
+     * Applies a new string converter that converts the entered string input
+     * to a concrete value.
+     *
+     * @param newValue
+     *              The string converter that transforms the user input string to
+     *              the field's underlying value and back.
+     * @param errorMessage
+     *              The error message to display if the transformation was
+     *              unsuccessful.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F format(StringConverter<V> newValue, String errorMessage) {
+        stringConverter = newValue;
+
+        if (isI18N()) {
+            formatErrorKey.set(errorMessage);
+        } else {
+            formatError.set(errorMessage);
+        }
+
+        validate();
+        return (F) this;
     }
 
     /**
@@ -138,9 +209,11 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *              the field's underlying value.
      *
      * @return Returns the current field to allow for chaining.
+     * @deprecated Use format(StringConverter) instead
      */
+    @Deprecated
     public F format(ValueTransformer<V> newValue) {
-        valueTransformer = newValue;
+        stringConverter = new StringConverterAdapter<>(newValue);
         validate();
         return (F) this;
     }
@@ -157,9 +230,11 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *              unsuccessful.
      *
      * @return Returns the current field to allow for chaining.
+     * @deprecated Use format(StringConverter, errorMessage) instead
      */
+    @Deprecated
     public F format(ValueTransformer<V> newValue, String errorMessage) {
-        valueTransformer = newValue;
+        stringConverter = new StringConverterAdapter<>(newValue);
 
         if (isI18N()) {
             formatErrorKey.set(errorMessage);
@@ -276,9 +351,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
             return;
         }
 
-        userInput.setValue(String.valueOf(persistentValue.getValue()));
-
-        fireEvent(FieldEvent.fieldResetEvent(this));
+        userInput.setValue(stringConverter.toString((V) persistentValue.getValue()));
     }
 
     /**
@@ -319,7 +392,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
         // Attempt a transformation from String to the field's underlying type.
 
         try {
-            transformedValue = valueTransformer.transform(newValue);
+            transformedValue = stringConverter.fromString(newValue);
         } catch (Exception e) {
             if (isI18N() && !formatErrorKey.get().isEmpty()) {
                 errorMessageKeys.setAll(formatErrorKey.get());
