@@ -20,6 +20,7 @@ package com.dlsc.formsfx.model.structure;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import com.dlsc.formsfx.model.util.ValueTransformer;
@@ -44,8 +45,8 @@ import java.util.stream.Collectors;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public class DataField<P extends Property, V, F extends Field> extends Field<F> {
-
+public abstract class DataField<P extends Property, V, F extends Field<F>> extends Field<F> {
+  
     /**
      * Every field tracks its value in multiple ways.
      *
@@ -58,15 +59,15 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
      *   is the responsibility of the form creator to persist the field values
      *   at the correct time.
      */
-    final P value;
-    private final P persistentValue;
-    final StringProperty userInput = new SimpleStringProperty("");
+    protected final P value;
+    protected final P persistentValue;
+    protected final StringProperty userInput = new SimpleStringProperty("");
 
     /**
      * Every field contains a list of validators. The validators are limited to
      * the ones that correspond to the field's type.
      */
-    private final List<Validator<V>> validators = new ArrayList<>();
+    protected final List<Validator<V>> validators = new ArrayList<>();
 
     /**
      * The value transformer is responsible for transforming the user input
@@ -89,8 +90,8 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty formatErrorKey = new SimpleStringProperty("");
-    private final StringProperty formatError = new SimpleStringProperty("");
+    protected final StringProperty formatErrorKey = new SimpleStringProperty("");
+    protected final StringProperty formatError = new SimpleStringProperty("");
 
     /**
      * This listener updates the field when the external binding changes.
@@ -99,7 +100,7 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
 
     /**
      * Internal constructor for the {@code DataField} class. To create new
-     * fields, see the static factory methods in {@code Field}.
+     * elements, see the static factory methods in {@code Field}.
      *
      * @see Field::ofStringType
      * @see Field::ofIntegerType
@@ -113,7 +114,7 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    DataField(P valueProperty, P persistentValueProperty) {
+    protected DataField(P valueProperty, P persistentValueProperty) {
         value = valueProperty;
         persistentValue = persistentValueProperty;
 
@@ -124,7 +125,7 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
 
         changed.bind(Bindings.createBooleanBinding(() -> !stringConverter.toString((V) persistentValue.getValue()).equals(userInput.getValue()), userInput, persistentValue));
 
-        // Whenever one of the translatable fields' keys change, update the
+        // Whenever one of the translatable elements' keys change, update the
         // displayed value based on the new translation.
 
         formatErrorKey.addListener((observable, oldValue, newValue) -> formatError.setValue(translationService.translate(newValue)));
@@ -331,19 +332,21 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
      * Stores the field's current value in its persistent value. This stores
      * the user's changes in the model.
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
 
         persistentValue.setValue(value.getValue());
+
+        fireEvent(FieldEvent.fieldPersistedEvent(this));
     }
 
     /**
      * Sets the field's current value to its persistent value, thus resetting
      * any changes made by the user.
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
@@ -370,13 +373,13 @@ public class DataField<P extends Property, V, F extends Field> extends Field<F> 
      *
      * @return Returns whether the user input is a valid value or not.
      */
-    boolean validate() {
+    public boolean validate() {
         String newValue = userInput.getValue();
 
         if (!validateRequired(newValue)) {
-            if (isI18N() && requiredErrorKey.get() != null) {
+            if (isI18N() && !requiredErrorKey.get().isEmpty()) {
                 errorMessageKeys.setAll(requiredErrorKey.get());
-            } else if (requiredError.get() != null) {
+            } else if (!requiredError.get().isEmpty()) {
                 errorMessages.setAll(requiredError.get());
             }
 

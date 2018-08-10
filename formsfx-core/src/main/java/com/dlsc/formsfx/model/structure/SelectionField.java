@@ -37,11 +37,11 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
     /**
      * Stores a typed list of available items on this field.
      */
-    final ListProperty<V> items;
+    protected final ListProperty<V> items;
 
     /**
      * Internal constructor for the {@code SelectionField} class. To create new
-     * fields, see the static factory methods in {@code Field}.
+     * elements, see the static factory methods in {@code Field}.
      *
      * @see Field::ofMultiSelectionType
      * @see Field::ofSingleSelectionType
@@ -49,7 +49,7 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
      * @param items
      *              The list of available items on the field.
      */
-    SelectionField(ListProperty<V> items) {
+    protected SelectionField(ListProperty<V> items) {
         this.items = items;
     }
 
@@ -58,7 +58,7 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
      *
      * @return Returns whether the input matches the required condition.
      */
-    abstract boolean validateRequired();
+    protected abstract boolean validateRequired();
 
     /**
      * Validates a user input based on the field's selection and its validation
@@ -73,7 +73,7 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
      *
      * @return Returns whether the user selection is a valid value or not.
      */
-    boolean validate(List<String> errorMessages) {
+    protected boolean validate(List<String> errorMessages) {
         if (!validateRequired()) {
             if (isI18N() && requiredErrorKey.get() != null) {
                 this.errorMessageKeys.setAll(requiredErrorKey.get());

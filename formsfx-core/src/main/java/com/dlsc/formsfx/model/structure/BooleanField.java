@@ -44,7 +44,7 @@ public class BooleanField extends DataField<BooleanProperty, Boolean, BooleanFie
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    BooleanField(SimpleBooleanProperty valueProperty, SimpleBooleanProperty persistentValueProperty) {
+    protected BooleanField(SimpleBooleanProperty valueProperty, SimpleBooleanProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
         stringConverter = new AbstractStringConverter<Boolean>() {

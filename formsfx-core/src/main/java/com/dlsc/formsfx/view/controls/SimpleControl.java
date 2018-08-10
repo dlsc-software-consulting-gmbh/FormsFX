@@ -48,7 +48,7 @@ public abstract class SimpleControl<F extends Field> extends GridPane implements
     /**
      * Tooltip to hold the error message.
      */
-    Tooltip tooltip;
+    protected Tooltip tooltip;
 
     /**
      * Pseudo classes for state changes.

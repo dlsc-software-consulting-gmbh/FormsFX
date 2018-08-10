@@ -20,6 +20,7 @@ package com.dlsc.formsfx.model.structure;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.event.FormEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import javafx.beans.property.BooleanProperty;
@@ -28,14 +29,19 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
- * A form is the containing unit for sections and fields and is used to bring
+ * A form is the containing unit for sections and elements and is used to bring
  * structure to form data. It also acts as a proxy to some properties of the
  * contained data, such as validity or changes.
  *
@@ -44,23 +50,23 @@ import java.util.stream.Collectors;
  */
 public class Form {
 
-    private final List<Group> groups = new ArrayList<>();
+    protected final List<Group> groups = new ArrayList<>();
 
     /**
      * The title acts as a description for the form.
      *
      * This property is translatable if a {@link TranslationService} is set.
      */
-    private final StringProperty title = new SimpleStringProperty("");
-    private final StringProperty titleKey = new SimpleStringProperty("");
+    protected final StringProperty title = new SimpleStringProperty("");
+    protected final StringProperty titleKey = new SimpleStringProperty("");
 
     /**
      * The form acts as a proxy for its contained sections' {@code changed}
      * and {@code valid} properties.
      */
-    private final BooleanProperty valid = new SimpleBooleanProperty(true);
-    private final BooleanProperty changed = new SimpleBooleanProperty(false);
-    private final BooleanProperty persistable = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty persistable = new SimpleBooleanProperty(false);
 
     /**
      * A form can optionally have a translation service. This service is used to
@@ -69,8 +75,10 @@ public class Form {
      *
      * @see TranslationService
      */
-    private final ObjectProperty<TranslationService> translationService = new SimpleObjectProperty<>();
-    private final Runnable localeChangeListener = this::translate;
+    protected final ObjectProperty<TranslationService> translationService = new SimpleObjectProperty<>();
+    protected final Runnable localeChangeListener = this::translate;
+
+    private final Map<EventType<FormEvent>,List<EventHandler<? super FormEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
     /**
      * Internal constructor for the {@code Form} class. To create new
@@ -184,7 +192,7 @@ public class Form {
      *
      * @see Group::translate
      */
-    private void translate() {
+    protected void translate() {
         TranslationService tr = translationService.get();
 
         if (!isI18N()) {
@@ -201,7 +209,7 @@ public class Form {
     }
 
     /**
-     * Persists the values for all fields contained in this form's groups.
+     * Persists the values for all elements contained in this form's groups.
      *
      * @see Field::reset
      */
@@ -211,10 +219,12 @@ public class Form {
         }
 
         groups.forEach(Group::persist);
+
+        fireEvent(FormEvent.formPersistedEvent(this));
     }
 
     /**
-     * Resets the values for all fields contained in this form's groups.
+     * Resets the values for all elements contained in this form's groups.
      *
      * @see Field::reset
      */
@@ -224,13 +234,15 @@ public class Form {
         }
 
         groups.forEach(Group::reset);
+
+        fireEvent(FormEvent.formResetEvent(this));
     }
 
     /**
      * Sets this form's {@code changed} property based on its contained
      * groups' changed properties.
      */
-    private void setChangedProperty() {
+    protected void setChangedProperty() {
         changed.setValue(groups.stream().anyMatch(Group::hasChanged));
         setPersistableProperty();
     }
@@ -239,7 +251,7 @@ public class Form {
      * Sets this form's {@code valid} property based on its contained groups'
      * changed properties.
      */
-    private void setValidProperty() {
+    protected void setValidProperty() {
         valid.setValue(groups.stream().allMatch(Group::isValid));
         setPersistableProperty();
     }
@@ -248,7 +260,7 @@ public class Form {
      * Sets this form's {@code persistable} property based on its contained
      * groups' persistable properties.
      */
-    private void setPersistableProperty() {
+    protected void setPersistableProperty() {
         persistable.setValue(groups.stream().anyMatch(Group::hasChanged) && groups.stream().allMatch(Group::isValid));
     }
 
@@ -256,11 +268,20 @@ public class Form {
         return groups;
     }
 
-    public List<Field> getFields() {
+    public List<Element> getElements() {
         return groups.stream()
-                .map(Group::getFields)
+                .map(Group::getElements)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+    }
+
+    public List<Field> getFields() {
+        return groups.stream()
+            .map(Group::getElements)
+            .flatMap(List::stream)
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .collect(Collectors.toList());
     }
 
     public boolean hasChanged() {
@@ -299,4 +320,65 @@ public class Form {
         return translationService.get() != null;
     }
 
+    /**
+     * Registers an event handler to this form. The handler is called when the
+     * form receives an {@code Event} of the specified type during the bubbling
+     * phase of event delivery.
+     *
+     * @param eventType    the type of the events to receive by the handler
+     * @param eventHandler the handler to register
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Form addEventHandler(EventType<FormEvent> eventType, EventHandler<? super FormEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        this.eventHandlers.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>()).add(eventHandler);
+
+        return this;
+    }
+
+    /**
+     * Unregisters a previously registered event handler from this form. One
+     * handler might have been registered for different event types, so the
+     * caller needs to specify the particular event type from which to
+     * unregister the handler.
+     *
+     * @param eventType    the event type from which to unregister
+     * @param eventHandler the handler to unregister
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Form removeEventHandler(EventType<FormEvent> eventType, EventHandler<? super FormEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        List<EventHandler<? super FormEvent>> list = this.eventHandlers.get(eventType);
+        if (list != null) {
+            list.remove(eventHandler);
+        }
+
+        return this;
+    }
+
+    protected void fireEvent(FormEvent event) {
+        List<EventHandler<? super FormEvent>> list = this.eventHandlers.get(event.getEventType());
+        if (list == null) {
+            return;
+        }
+        for (EventHandler<? super FormEvent> eventHandler : list) {
+            if (!event.isConsumed()) {
+                eventHandler.handle(event);
+            }
+        }
+    }
 }

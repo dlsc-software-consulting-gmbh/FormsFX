@@ -20,8 +20,10 @@ package com.dlsc.formsfx.view.renderer;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.structure.Element;
 import com.dlsc.formsfx.model.structure.Field;
 import com.dlsc.formsfx.model.structure.Group;
+import com.dlsc.formsfx.model.structure.NodeElement;
 import com.dlsc.formsfx.view.controls.SimpleControl;
 import com.dlsc.formsfx.view.util.ViewMixin;
 import javafx.geometry.Insets;
@@ -78,18 +80,23 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
         // Add the controls in the GridPane in a 12-column layout. If a control
         // takes up too much horizontal space, wrap it to the next row.
 
-        for (Field f : element.getFields()) {
-            int span = f.getSpan();
+        for (Element e : element.getElements()) {
+            int span = e.getSpan();
 
             if (currentColumnCount + span > COLUMN_COUNT) {
                 currentRow += 1;
                 currentColumnCount = 0;
             }
 
-            SimpleControl c = f.getRenderer();
-            c.setField(f);
+            if (e instanceof Field) {
+                Field f = (Field) e;
+                SimpleControl c = f.getRenderer();
+                c.setField(f);
 
-            grid.add(c, currentColumnCount, currentRow, span, 1);
+                grid.add(c, currentColumnCount, currentRow, span, 1);
+            } else if (e instanceof NodeElement){
+                grid.add(((NodeElement)e).getNode(), currentColumnCount, currentRow, span, 1);
+            }
 
             currentColumnCount += span;
         }

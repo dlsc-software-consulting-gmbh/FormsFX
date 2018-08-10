@@ -23,9 +23,12 @@ package com.dlsc.formsfx.view.controls;
 import com.dlsc.formsfx.model.structure.StringField;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -42,7 +45,7 @@ public class SimpleTextControl extends SimpleControl<StringField> {
      * the readOnlyLabel over the editableField on the change of the
      * visibleProperty.
      */
-    private StackPane stack;
+    protected StackPane stack;
 
     /**
      * - The fieldLabel is the container that displays the label property of
@@ -50,10 +53,10 @@ public class SimpleTextControl extends SimpleControl<StringField> {
      * - The editableField allows users to modify the field's value.
      * - The readOnlyLabel displays the field's value if it is not editable.
      */
-    private TextField editableField;
-    private TextArea editableArea;
-    private Label readOnlyLabel;
-    private Label fieldLabel;
+    protected TextField editableField;
+    protected TextArea editableArea;
+    protected Label readOnlyLabel;
+    protected Label fieldLabel;
 
     /**
      * {@inheritDoc}
@@ -99,14 +102,34 @@ public class SimpleTextControl extends SimpleControl<StringField> {
 
         stack.setAlignment(Pos.CENTER_LEFT);
 
+        Node labelDescription = field.getLabelDescription();
+        Node valueDescription = field.getValueDescription();
+
         int columns = field.getSpan();
 
         if (columns < 3) {
-            add(fieldLabel, 0, 0, columns, 1);
-            add(stack, 0, 1, columns, 1);
+            int rowIndex = 0;
+            add(fieldLabel, 0, rowIndex++, columns, 1);
+            if (labelDescription != null) {
+                GridPane.setValignment(labelDescription, VPos.TOP);
+                add(labelDescription, 0, rowIndex++, columns, 1);
+            }
+            add(stack, 0, rowIndex++, columns, 1);
+            if (valueDescription != null) {
+                GridPane.setValignment(valueDescription, VPos.TOP);
+                add(valueDescription, 0, rowIndex, columns, 1);
+            }
         } else {
             add(fieldLabel, 0, 0, 2, 1);
+            if (labelDescription != null) {
+                GridPane.setValignment(labelDescription, VPos.TOP);
+                add(labelDescription, 0, 1, 2, 1);
+            }
             add(stack, 2, 0, columns - 2, 1);
+            if (valueDescription != null) {
+                GridPane.setValignment(valueDescription, VPos.TOP);
+                add(valueDescription, 2, 1, columns - 2, 1);
+            }
         }
     }
 

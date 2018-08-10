@@ -43,7 +43,7 @@ public class DoubleField extends DataField<DoubleProperty, Double, DoubleField> 
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    DoubleField(SimpleDoubleProperty valueProperty, SimpleDoubleProperty persistentValueProperty) {
+    protected DoubleField(SimpleDoubleProperty valueProperty, SimpleDoubleProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
         stringConverter = new AbstractStringConverter<Double>() {

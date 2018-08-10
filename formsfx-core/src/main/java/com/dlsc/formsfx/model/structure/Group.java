@@ -21,17 +21,23 @@ package com.dlsc.formsfx.model.structure;
  */
 
 
+import com.dlsc.formsfx.model.event.GroupEvent;
 import com.dlsc.formsfx.model.util.TranslationService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A group is the intermediate unit in a form. It is used to group form
- * fields to a larger unit. It also acts as a proxy to some properties of
+ * elements to a larger unit. It also acts as a proxy to some properties of
  * the contained data, such as validity or changes.
  *
  * @author Sacha Schmid
@@ -39,14 +45,14 @@ import java.util.List;
  */
 public class Group {
 
-    protected final List<Field> fields = new ArrayList<>();
+    protected final List<Element> elements = new ArrayList<>();
 
     /**
-     * The group acts as a proxy for its contained fields' {@code changed}
+     * The group acts as a proxy for its contained elements' {@code changed}
      * and {@code valid} properties.
      */
-    private final BooleanProperty valid = new SimpleBooleanProperty(true);
-    private final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
 
     /**
      * The translation service is passed down from the containing form. It
@@ -54,107 +60,132 @@ public class Group {
      */
     protected TranslationService translationService;
 
+    private final Map<EventType<GroupEvent>,List<EventHandler<? super GroupEvent>>> eventHandlers = new ConcurrentHashMap<>();
+
     /**
      * Internal constructor for the {@code Group} class. To create new
      * groups, see the static factory method in this class.
      *
      * @see Group::of
      *
-     * @param fields
-     *              A varargs list of fields that are contained in this
+     * @param elements
+     *              A varargs list of elements that are contained in this
      *              group.
      */
-    protected Group(Field... fields) {
-        Collections.addAll(this.fields, fields);
+    protected Group(Element... elements) {
+        Collections.addAll(this.elements, elements);
 
-        // If any of the fields are marked as changed, the group is updated
+        // If any of the elements are marked as changed, the group is updated
         // accordingly.
 
-        this.fields.forEach(f -> f.changedProperty().addListener((observable, oldValue, newValue) -> setChangedProperty()));
+        this.elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.changedProperty().addListener((observable, oldValue, newValue) -> setChangedProperty()));
 
-        // If any of the fields are marked as invalid, the group is updated
+        // If any of the elements are marked as invalid, the group is updated
         // accordingly.
 
-        this.fields.forEach(f -> f.validProperty().addListener((observable, oldValue, newValue) -> setValidProperty()));
+        this.elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.validProperty().addListener((observable, oldValue, newValue) -> setValidProperty()));
 
         setValidProperty();
         setChangedProperty();
     }
 
     /**
-     * Creates a new group containing the given fields.
+     * Creates a new group containing the given elements.
      *
-     * @param fields
-     *              The fields to be included in the group.
+     * @param elements
+     *              The elements to be included in the group.
      *
      * @return Returns a new {@code Group}.
      */
-    public static Group of(Field... fields) {
-        return new Group(fields);
+    public static Group of(Element... elements) {
+        return new Group(elements);
     }
 
     /**
      * This internal method is called by the containing form when a new
      * translation has been added to the form. Also applies the translation
-     * to all contained fields.
+     * to all contained elements.
      *
      * @see Field::translate
      *
      * @param newValue
      *              The new service to use for translating translatable values.
      */
-    void translate(TranslationService newValue) {
+    protected void translate(TranslationService newValue) {
         translationService = newValue;
 
         if (!isI18N()) {
             return;
         }
 
-        fields.forEach(f -> f.translate(translationService));
+        elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.translate(translationService));
     }
 
     /**
-     * Persists the values for all contained fields.
+     * Persists the values for all contained elements.
      * @see Field::persist
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
 
-        fields.forEach(Field::persist);
+        elements.stream()
+            .filter(e -> e instanceof FormElement)
+            .map(e -> (FormElement) e)
+            .forEach(FormElement::persist);
+
+        fireEvent(GroupEvent.groupPersistedEvent(this));
     }
 
     /**
-     * Resets the values for all contained fields.
+     * Resets the values for all contained elements.
      * @see Field::reset
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
 
-        fields.forEach(Field::reset);
+        elements.stream()
+            .filter(e -> e instanceof FormElement)
+            .map(e -> (FormElement) e)
+            .forEach(FormElement::reset);
     }
 
     /**
      * Sets this group's {@code changed} property based on its contained
-     * fields' changed properties.
+     * elements' changed properties.
      */
     private void setChangedProperty() {
-        changed.setValue(fields.stream().anyMatch(Field::hasChanged));
+        changed.setValue(elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .anyMatch(Field::hasChanged));
     }
 
     /**
-     * Sets this group's {@code valid} property based on its contained fields'
+     * Sets this group's {@code valid} property based on its contained elements'
      * changed properties.
      */
     private void setValidProperty() {
-        valid.setValue(fields.stream().allMatch(Field::isValid));
+        valid.setValue(elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .allMatch(Field::isValid));
     }
 
-    public List<Field> getFields() {
-        return fields;
+    public List<Element> getElements() {
+        return elements;
     }
 
     public boolean hasChanged() {
@@ -177,4 +208,65 @@ public class Group {
         return translationService != null;
     }
 
+    /**
+     * Registers an event handler to this group. The handler is called when the
+     * group receives an {@code Event} of the specified type during the bubbling
+     * phase of event delivery.
+     *
+     * @param eventType    the type of the events to receive by the handler
+     * @param eventHandler the handler to register
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Group addEventHandler(EventType<GroupEvent> eventType, EventHandler<? super GroupEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        this.eventHandlers.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>()).add(eventHandler);
+
+        return this;
+    }
+
+    /**
+     * Unregisters a previously registered event handler from this group. One
+     * handler might have been registered for different event types, so the
+     * caller needs to specify the particular event type from which to
+     * unregister the handler.
+     *
+     * @param eventType    the event type from which to unregister
+     * @param eventHandler the handler to unregister
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Group removeEventHandler(EventType<GroupEvent> eventType, EventHandler<? super GroupEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        List<EventHandler<? super GroupEvent>> list = this.eventHandlers.get(eventType);
+        if (list != null) {
+            list.remove(eventHandler);
+        }
+
+        return this;
+    }
+
+    protected void fireEvent(GroupEvent event) {
+        List<EventHandler<? super GroupEvent>> list = this.eventHandlers.get(event.getEventType());
+        if (list == null) {
+            return;
+        }
+        for (EventHandler<? super GroupEvent> eventHandler : list) {
+            if (!event.isConsumed()) {
+                eventHandler.handle(event);
+            }
+        }
+    }
 }

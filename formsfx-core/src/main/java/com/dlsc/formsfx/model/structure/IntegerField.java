@@ -44,7 +44,7 @@ public class IntegerField extends DataField<IntegerProperty, Integer, IntegerFie
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    IntegerField(SimpleIntegerProperty valueProperty, SimpleIntegerProperty persistentValueProperty) {
+    protected IntegerField(SimpleIntegerProperty valueProperty, SimpleIntegerProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
         stringConverter = new AbstractStringConverter<Integer>() {

@@ -37,7 +37,7 @@ public class GroupRenderer extends GroupRendererBase {
      * @param group
      *              The section which gets rendered.
      */
-    GroupRenderer(Group group) {
+    protected GroupRenderer(Group group) {
         this.element = group;
         init();
     }
