@@ -44,7 +44,7 @@ public class PasswordField extends DataField<StringProperty, String, PasswordFie
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    PasswordField(SimpleStringProperty valueProperty, SimpleStringProperty persistentValueProperty) {
+    protected PasswordField(SimpleStringProperty valueProperty, SimpleStringProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
         valueTransformer = String::valueOf;

@@ -38,8 +38,8 @@ import java.util.stream.Collectors;
  */
 public class FormRenderer extends VBox implements ViewMixin {
 
-    private Form form;
-    private List<GroupRendererBase> sections = new ArrayList<>();
+    protected Form form;
+    protected List<GroupRendererBase> sections = new ArrayList<>();
 
     /**
      * This is the constructor to pass over data.

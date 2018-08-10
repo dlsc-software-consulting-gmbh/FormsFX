@@ -34,7 +34,7 @@ public class CustomValidator<T> extends RootValidator<T> {
 
     private Predicate<T> callback;
 
-    CustomValidator(Predicate<T> callback, String errorMessage) {
+    protected CustomValidator(Predicate<T> callback, String errorMessage) {
         super(errorMessage);
         this.callback = callback;
     }

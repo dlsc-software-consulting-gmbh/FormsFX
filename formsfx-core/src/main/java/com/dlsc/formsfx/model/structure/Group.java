@@ -21,13 +21,19 @@ package com.dlsc.formsfx.model.structure;
  */
 
 
+import com.dlsc.formsfx.model.event.GroupEvent;
 import com.dlsc.formsfx.model.util.TranslationService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A group is the intermediate unit in a form. It is used to group form
@@ -45,14 +51,16 @@ public class Group {
      * The group acts as a proxy for its contained elements' {@code changed}
      * and {@code valid} properties.
      */
-    private final BooleanProperty valid = new SimpleBooleanProperty(true);
-    private final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
 
     /**
      * The translation service is passed down from the containing form. It
      * is used to translate all translatable values of the field.
      */
     protected TranslationService translationService;
+
+    private final Map<EventType<GroupEvent>,List<EventHandler<? super GroupEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
     /**
      * Internal constructor for the {@code Group} class. To create new
@@ -109,7 +117,7 @@ public class Group {
      * @param newValue
      *              The new service to use for translating translatable values.
      */
-    void translate(TranslationService newValue) {
+    protected void translate(TranslationService newValue) {
         translationService = newValue;
 
         if (!isI18N()) {
@@ -126,7 +134,7 @@ public class Group {
      * Persists the values for all contained elements.
      * @see Field::persist
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
@@ -135,13 +143,15 @@ public class Group {
             .filter(e -> e instanceof FormElement)
             .map(e -> (FormElement) e)
             .forEach(FormElement::persist);
+
+        fireEvent(GroupEvent.groupPersistedEvent(this));
     }
 
     /**
      * Resets the values for all contained elements.
      * @see Field::reset
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
@@ -198,4 +208,65 @@ public class Group {
         return translationService != null;
     }
 
+    /**
+     * Registers an event handler to this group. The handler is called when the
+     * group receives an {@code Event} of the specified type during the bubbling
+     * phase of event delivery.
+     *
+     * @param eventType    the type of the events to receive by the handler
+     * @param eventHandler the handler to register
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Group addEventHandler(EventType<GroupEvent> eventType, EventHandler<? super GroupEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        this.eventHandlers.computeIfAbsent(eventType, k -> new CopyOnWriteArrayList<>()).add(eventHandler);
+
+        return this;
+    }
+
+    /**
+     * Unregisters a previously registered event handler from this group. One
+     * handler might have been registered for different event types, so the
+     * caller needs to specify the particular event type from which to
+     * unregister the handler.
+     *
+     * @param eventType    the event type from which to unregister
+     * @param eventHandler the handler to unregister
+     *
+     * @throws NullPointerException if either event type or handler are {@code null}.
+     */
+    public Group removeEventHandler(EventType<GroupEvent> eventType, EventHandler<? super GroupEvent> eventHandler) {
+        if (eventType == null) {
+            throw new NullPointerException("Argument eventType must not be null");
+        }
+        if (eventHandler == null) {
+            throw new NullPointerException("Argument eventHandler must not be null");
+        }
+
+        List<EventHandler<? super GroupEvent>> list = this.eventHandlers.get(eventType);
+        if (list != null) {
+            list.remove(eventHandler);
+        }
+
+        return this;
+    }
+
+    protected void fireEvent(GroupEvent event) {
+        List<EventHandler<? super GroupEvent>> list = this.eventHandlers.get(event.getEventType());
+        if (list == null) {
+            return;
+        }
+        for (EventHandler<? super GroupEvent> eventHandler : list) {
+            if (!event.isConsumed()) {
+                eventHandler.handle(event);
+            }
+        }
+    }
 }

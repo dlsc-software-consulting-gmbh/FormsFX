@@ -35,7 +35,7 @@ import javafx.beans.property.StringProperty;
  */
 public class StringField extends DataField<StringProperty, String, StringField> {
 
-    private final BooleanProperty multiline = new SimpleBooleanProperty(false);
+    protected final BooleanProperty multiline = new SimpleBooleanProperty(false);
 
     /**
      * The constructor of {@code StringField}.
@@ -47,7 +47,7 @@ public class StringField extends DataField<StringProperty, String, StringField> 
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    StringField(SimpleStringProperty valueProperty, SimpleStringProperty persistentValueProperty) {
+    protected StringField(SimpleStringProperty valueProperty, SimpleStringProperty persistentValueProperty) {
         super(valueProperty, persistentValueProperty);
 
         valueTransformer = String::valueOf;
