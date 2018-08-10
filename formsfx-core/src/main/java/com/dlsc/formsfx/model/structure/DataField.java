@@ -20,6 +20,7 @@ package com.dlsc.formsfx.model.structure;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import com.dlsc.formsfx.model.util.ValueTransformer;
@@ -262,6 +263,8 @@ public abstract class DataField<P extends Property, V, F extends Field> extends 
         }
 
         persistentValue.setValue(value.getValue());
+
+        fireEvent(FieldEvent.fieldPersistedEvent(this));
     }
 
     /**
@@ -274,6 +277,8 @@ public abstract class DataField<P extends Property, V, F extends Field> extends 
         }
 
         userInput.setValue(String.valueOf(persistentValue.getValue()));
+
+        fireEvent(FieldEvent.fieldResetEvent(this));
     }
 
     /**

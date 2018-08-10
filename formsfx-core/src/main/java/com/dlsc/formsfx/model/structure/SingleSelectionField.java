@@ -20,6 +20,7 @@ package com.dlsc.formsfx.model.structure;
  * =========================LICENSE_END==================================
  */
 
+import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
@@ -242,6 +243,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         }
 
         persistentSelection.setValue(selection.getValue());
+
+        fireEvent(FieldEvent.fieldPersistedEvent(this));
     }
 
     /**
@@ -254,6 +257,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         }
 
         selection.setValue(persistentSelection.getValue());
+
+        fireEvent(FieldEvent.fieldResetEvent(this));
     }
 
     /**
