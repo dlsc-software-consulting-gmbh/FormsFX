@@ -48,14 +48,14 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * A {@code MultiSelectionField} can have multiple items selected. These
      * items are stored in a {@code ListProperty}.
      */
-    private final ListProperty<V> persistentSelection = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final ListProperty<V> selection = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ListProperty<V> persistentSelection = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ListProperty<V> selection = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     /**
      * Every field contains a list of validators. The validators are limited to
      * the ones that correspond to the field's type.
      */
-    private final List<Validator<ObservableList<V>>> validators = new ArrayList<>();
+    protected final List<Validator<ObservableList<V>>> validators = new ArrayList<>();
 
     /**
      * The constructor of {@code MultiSelectionField}.
@@ -65,7 +65,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * @param selection
      *              The list of indices of items that are to be selected.
      */
-    MultiSelectionField(ListProperty<V> items, List<Integer> selection) {
+    protected MultiSelectionField(ListProperty<V> items, List<Integer> selection) {
         super(items);
 
         // Add items to the selection, based on their indices. This also
@@ -240,7 +240,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * Stores the field's current selection in its persistent selection. This
      * stores the user's changes in the model.
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
@@ -254,7 +254,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * Sets the field's current selection to its persistent selection, thus
      * resetting any changes made by the user.
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
@@ -267,7 +267,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
     /**
      * {@inheritDoc}
      */
-    boolean validateRequired() {
+    protected boolean validateRequired() {
         return !isRequired() || (isRequired() && selection.size() > 0);
     }
 
@@ -278,7 +278,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      *
      * @return Returns whether the user selection is a valid value or not.
      */
-    boolean validate() {
+    public boolean validate() {
 
         // Check all validation rules and collect any error messages.
 

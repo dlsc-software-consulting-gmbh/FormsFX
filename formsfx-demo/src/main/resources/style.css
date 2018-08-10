@@ -2,7 +2,10 @@
     font-family: 'Flaticon';
     src: url(/flaticon.ttf);
 }
-
+.field-label-description,
+.field-value-description {
+    -fx-text-fill: red;
+}
 .root-pane {
     -fx-padding: 0;
     -fx-font-family: 'Arial';

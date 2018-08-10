@@ -41,6 +41,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,8 +73,8 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty label = new SimpleStringProperty("");
-    private final StringProperty labelKey = new SimpleStringProperty("");
+    protected final StringProperty label = new SimpleStringProperty("");
+    protected final StringProperty labelKey = new SimpleStringProperty("");
 
     /**
      * The tooltip is an extension of the label. It contains additional
@@ -80,8 +83,8 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty tooltip = new SimpleStringProperty("");
-    private final StringProperty tooltipKey = new SimpleStringProperty("");
+    protected final StringProperty tooltip = new SimpleStringProperty("");
+    protected final StringProperty tooltipKey = new SimpleStringProperty("");
 
     /**
      * The placeholder is only visible in an empty field. It provides a hint to
@@ -90,31 +93,31 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty placeholder = new SimpleStringProperty("");
-    private final StringProperty placeholderKey = new SimpleStringProperty("");
+    protected final StringProperty placeholder = new SimpleStringProperty("");
+    protected final StringProperty placeholderKey = new SimpleStringProperty("");
 
     /**
      * Every field can be marked as {@code required} and {@code editable}. These
      * properties can change the field's behaviour.
      */
-    final StringProperty requiredErrorKey = new SimpleStringProperty("");
-    final StringProperty requiredError = new SimpleStringProperty("");
-    private final BooleanProperty required = new SimpleBooleanProperty(false);
-    private final BooleanProperty editable = new SimpleBooleanProperty(true);
+    protected final StringProperty requiredErrorKey = new SimpleStringProperty("");
+    protected final StringProperty requiredError = new SimpleStringProperty("");
+    protected final BooleanProperty required = new SimpleBooleanProperty(false);
+    protected final BooleanProperty editable = new SimpleBooleanProperty(true);
 
     /**
      * The field's current state is represented by the value properties, as
      * well as by the {@code valid} and {@code changed} flags.
      */
-    final BooleanProperty valid = new SimpleBooleanProperty(true);
-    final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
 
     /**
      * Fields can be styled using CSS through ID or class hooks.
      */
-    private final StringProperty id = new SimpleStringProperty(UUID.randomUUID().toString());
-    private final ListProperty<String> styleClass = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final IntegerProperty span = new SimpleIntegerProperty(12);
+    protected final StringProperty id = new SimpleStringProperty(UUID.randomUUID().toString());
+    protected final ListProperty<String> styleClass = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final IntegerProperty span = new SimpleIntegerProperty(12);
 
     /**
      * The results of the field's validation is stored in this property. After
@@ -123,16 +126,30 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    final ListProperty<String> errorMessages = new SimpleListProperty<>(FXCollections.observableArrayList());
-    final ListProperty<String> errorMessageKeys = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ListProperty<String> errorMessages = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ListProperty<String> errorMessageKeys = new SimpleListProperty<>(FXCollections.observableArrayList());
+
+    /**
+     * Additional descriptions for the field's label and value are stored in these properties.
+     *
+     * These properties are translatable if a {@link TranslationService} is set on
+     * the containing form.
+     */
+    private Node labelDescription;
+    private Node valueDescription;
+    private final StringProperty labelDescriptionKey = new SimpleStringProperty("");
+    private final StringProperty valueDescriptionKey = new SimpleStringProperty("");
+
+    private static final String LABEL_DESCRIPTION_STYLE_CLASS = "field-label-description";
+    private static final String VALUE_DESCRIPTION_STYLE_CLASS = "field-value-description";
 
     /**
      * The translation service is passed down from the containing section. It
      * is used to translate all translatable values of the field.
      */
-    TranslationService translationService;
+    protected TranslationService translationService;
 
-    SimpleControl<F> renderer;
+    protected SimpleControl<F> renderer;
 
     protected final Map<EventType<FieldEvent>,List<EventHandler<? super FieldEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
@@ -140,7 +157,7 @@ public abstract class Field<F extends Field> {
      * With the continuous binding mode, values are always directly persisted
      * upon any changes.
      */
-    final InvalidationListener bindingModeListener = (observable) -> {
+    protected final InvalidationListener bindingModeListener = (observable) -> {
         if (validate()) {
             persist();
         }
@@ -157,7 +174,7 @@ public abstract class Field<F extends Field> {
      * @see Field::ofMultiSelectionType
      * @see Field::ofSingleSelectionType
      */
-    Field() {
+    protected Field() {
 
         // Whenever one of the translatable fields' keys change, update the
         // displayed value based on the new translation.
@@ -167,6 +184,10 @@ public abstract class Field<F extends Field> {
         tooltipKey.addListener((observable, oldValue, newValue) -> tooltip.setValue(translationService.translate(newValue)));
 
         placeholderKey.addListener((observable, oldValue, newValue) -> placeholder.setValue(translationService.translate(newValue)));
+
+        labelDescriptionKey.addListener((observable, oldValue, newValue) -> labelDescription = asLabel(translationService.translate(newValue), LABEL_DESCRIPTION_STYLE_CLASS));
+
+        valueDescriptionKey.addListener((observable, oldValue, newValue) -> valueDescription = asLabel(translationService.translate(newValue), VALUE_DESCRIPTION_STYLE_CLASS));
 
         requiredErrorKey.addListener((observable, oldValue, newValue) -> validate());
 
@@ -460,6 +481,89 @@ public abstract class Field<F extends Field> {
     }
 
     /**
+     * Sets the label description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the label description property.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F labelDescription(Node newValue) {
+        labelDescription = newValue;
+        if (labelDescription != null) {
+            labelDescription.getStyleClass().add(LABEL_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    /**
+     * Sets the label description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the label description property,
+     *              wrapped with a {@code Text}.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F labelDescription(String newValue) {
+        if(isI18N()) {
+            labelDescriptionKey.set(newValue);
+        } else if (newValue != null) {
+            labelDescription = asLabel(newValue, LABEL_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    /**
+     * Sets the value description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the field description property.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F valueDescription(Node newValue) {
+        valueDescription = newValue;
+        if (valueDescription != null) {
+            valueDescription.getStyleClass().add(VALUE_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    /**
+     * Sets the value description property of the current field.
+     *
+     * @param newValue
+     *              The new value for the field description property,
+     *              wrapped with a {@code Text}.
+     *
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F valueDescription(String newValue) {
+        if(isI18N()) {
+            valueDescriptionKey.set(newValue);
+        } else if (newValue != null) {
+            valueDescription = asLabel(newValue, VALUE_DESCRIPTION_STYLE_CLASS);
+        }
+
+        return (F) this;
+    }
+
+    private Label asLabel(String text, String styleClass) {
+        Label label = new Label(text);
+        label.setWrapText(true);
+        label.getStyleClass().add(styleClass);
+        return label;
+    }
+
+    /**
      * Sets the tooltip property of the current field.
      *
      * @param newValue
@@ -573,11 +677,11 @@ public abstract class Field<F extends Field> {
      * @param newValue
      *              The new binding mode for the current field.
      */
-    abstract void setBindingMode(BindingMode newValue);
+    public abstract void setBindingMode(BindingMode newValue);
 
-    abstract void persist();
+    public abstract void persist();
 
-    abstract void reset();
+    public abstract void reset();
 
     /**
      * This internal method is called by the containing section when a new
@@ -597,6 +701,8 @@ public abstract class Field<F extends Field> {
         updateElement(tooltip, tooltipKey);
         updateElement(placeholder, placeholderKey);
         updateElement(requiredError, requiredErrorKey);
+        updateElement(labelDescription, labelDescriptionKey);
+        updateElement(valueDescription, valueDescriptionKey);
 
         // Validation results are handled separately as they use a somewhat
         // more complex structure.
@@ -612,7 +718,7 @@ public abstract class Field<F extends Field> {
      * @param keyProperty
      *              The internal property that holds the translation key.
      */
-    void updateElement(StringProperty displayProperty, StringProperty keyProperty) {
+    protected void updateElement(StringProperty displayProperty, StringProperty keyProperty) {
 
         // If the key has not yet been set that means that the translation
         // service was added for the first time. We can simply set the key
@@ -627,13 +733,42 @@ public abstract class Field<F extends Field> {
     }
 
     /**
+     * Updates a displayable field property to include translated text.
+     *
+     * @param node
+     *              The property that is displayed to the user.
+     * @param keyProperty
+     *              The internal property that holds the translation key.
+     */
+    void updateElement(Node node, StringProperty keyProperty) {
+
+        // If the key has not yet been set that means that the translation
+        // service was added for the first time. We can simply set the key
+        // to the value stored in the display property, the listener will
+        // then take care of the translation.
+
+        if (!(node instanceof Labeled)) {
+            // no automatic update
+            return;
+        }
+
+        Labeled labeled = (Labeled) node;
+
+        if ((keyProperty.get() == null || keyProperty.get().isEmpty()) && !labeled.getText().isEmpty()) {
+            keyProperty.setValue(labeled.getText());
+        } else if (!keyProperty.get().isEmpty()) {
+            labeled.setText(translationService.translate(keyProperty.get()));
+        }
+    }
+
+    /**
      * Validates a user input based on the field's value transformer and its
      * validation rules. Also considers the {@code required} flag. This method
      * directly updates the {@code valid} property.
      *
      * @return Returns whether the user input is a valid value or not.
      */
-    abstract boolean validate();
+    protected abstract boolean validate();
 
     public String getPlaceholder() {
         return placeholder.get();
@@ -791,5 +926,13 @@ public abstract class Field<F extends Field> {
                 eventHandler.handle(event);
             }
         }
+    }
+  
+    public Node getLabelDescription() {
+        return labelDescription;
+    }
+
+    public Node getValueDescription() {
+        return valueDescription;
     }
 }

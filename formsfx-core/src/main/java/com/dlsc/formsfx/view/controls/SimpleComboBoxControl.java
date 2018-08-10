@@ -22,8 +22,11 @@ package com.dlsc.formsfx.view.controls;
 
 import com.dlsc.formsfx.model.structure.SingleSelectionField;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -43,10 +46,10 @@ public class SimpleComboBoxControl<V> extends SimpleControl<SingleSelectionField
      * - The readOnlyLabel is used to show the current selection in read only.
      * - The stack is a StackPane to hold the field and read only label.
      */
-    private Label fieldLabel;
-    private ComboBox<V> comboBox;
-    private Label readOnlyLabel;
-    private StackPane stack;
+    protected Label fieldLabel;
+    protected ComboBox<V> comboBox;
+    protected Label readOnlyLabel;
+    protected StackPane stack;
 
     /**
      * {@inheritDoc}
@@ -82,8 +85,19 @@ public class SimpleComboBoxControl<V> extends SimpleControl<SingleSelectionField
         stack.setAlignment(Pos.CENTER_LEFT);
         stack.getChildren().addAll(comboBox, readOnlyLabel);
 
-        add(fieldLabel, 0,0,2,1);
+        Node labelDescription = field.getLabelDescription();
+        Node valueDescription = field.getValueDescription();
+
+        add(fieldLabel, 0, 0, 2, 1);
+        if (labelDescription != null) {
+            GridPane.setValignment(labelDescription, VPos.TOP);
+            add(labelDescription, 0, 1, 2, 1);
+        }
         add(stack, 2, 0, columns - 2, 1);
+        if (valueDescription != null) {
+            GridPane.setValignment(valueDescription, VPos.TOP);
+            add(valueDescription, 2, 1, columns - 2, 1);
+        }
     }
 
     /**

@@ -51,8 +51,8 @@ public class Group {
      * The group acts as a proxy for its contained fields' {@code changed}
      * and {@code valid} properties.
      */
-    private final BooleanProperty valid = new SimpleBooleanProperty(true);
-    private final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
 
     /**
      * The translation service is passed down from the containing form. It
@@ -111,7 +111,7 @@ public class Group {
      * @param newValue
      *              The new service to use for translating translatable values.
      */
-    void translate(TranslationService newValue) {
+    protected void translate(TranslationService newValue) {
         translationService = newValue;
 
         if (!isI18N()) {
@@ -125,7 +125,7 @@ public class Group {
      * Persists the values for all contained fields.
      * @see Field::persist
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
@@ -139,7 +139,7 @@ public class Group {
      * Resets the values for all contained fields.
      * @see Field::reset
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
@@ -153,7 +153,7 @@ public class Group {
      * Sets this group's {@code changed} property based on its contained
      * fields' changed properties.
      */
-    private void setChangedProperty() {
+    protected void setChangedProperty() {
         changed.setValue(fields.stream().anyMatch(Field::hasChanged));
     }
 
@@ -161,7 +161,7 @@ public class Group {
      * Sets this group's {@code valid} property based on its contained fields'
      * changed properties.
      */
-    private void setValidProperty() {
+    protected void setValidProperty() {
         valid.setValue(fields.stream().allMatch(Field::isValid));
     }
 

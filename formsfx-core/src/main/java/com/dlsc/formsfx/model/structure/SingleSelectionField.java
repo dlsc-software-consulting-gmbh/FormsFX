@@ -47,14 +47,14 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * A {@code SingleSelectionField} can only ever have one item selected.
      * This item is stored in an {@code ObjectProperty}.
      */
-    private final ObjectProperty<V> persistentSelection = new SimpleObjectProperty<>();
-    private final ObjectProperty<V> selection = new SimpleObjectProperty<>();
+    protected final ObjectProperty<V> persistentSelection = new SimpleObjectProperty<>();
+    protected final ObjectProperty<V> selection = new SimpleObjectProperty<>();
 
     /**
      * Every field contains a list of validators. The validators are limited to
      * the ones that correspond to the field's type.
      */
-    private final List<Validator<V>> validators = new ArrayList<>();
+    protected final List<Validator<V>> validators = new ArrayList<>();
 
     /**
      * The constructor of {@code SingleSelectionField}.
@@ -64,7 +64,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * @param selection
      *              The index of the item that is to be selected.
      */
-    SingleSelectionField(ListProperty<V> items, int selection) {
+    protected SingleSelectionField(ListProperty<V> items, int selection) {
         super(items);
 
         // Sets the initial selection, based on an index. This also determines
@@ -237,7 +237,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * Stores the field's current value in its persistent value. This stores
      * the user's changes in the model.
      */
-    void persist() {
+    public void persist() {
         if (!isValid()) {
             return;
         }
@@ -251,7 +251,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * Sets the field's current value to its persistent value, thus resetting
      * any changes made by the user.
      */
-    void reset() {
+    public void reset() {
         if (!hasChanged()) {
             return;
         }
@@ -264,7 +264,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
     /**
      * {@inheritDoc}
      */
-    boolean validateRequired() {
+    protected boolean validateRequired() {
         return !isRequired() || (isRequired() && selection.get() != null);
     }
 
@@ -275,7 +275,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      *
      * @return Returns whether the user selection is a valid value or not.
      */
-    boolean validate() {
+    public boolean validate() {
 
         // Check all validation rules and collect any error messages.
 
