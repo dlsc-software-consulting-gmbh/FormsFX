@@ -67,8 +67,8 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty label = new SimpleStringProperty("");
-    private final StringProperty labelKey = new SimpleStringProperty("");
+    protected final StringProperty label = new SimpleStringProperty("");
+    protected final StringProperty labelKey = new SimpleStringProperty("");
 
     /**
      * The tooltip is an extension of the label. It contains additional
@@ -77,8 +77,8 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty tooltip = new SimpleStringProperty("");
-    private final StringProperty tooltipKey = new SimpleStringProperty("");
+    protected final StringProperty tooltip = new SimpleStringProperty("");
+    protected final StringProperty tooltipKey = new SimpleStringProperty("");
 
     /**
      * The placeholder is only visible in an empty field. It provides a hint to
@@ -87,31 +87,31 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    private final StringProperty placeholder = new SimpleStringProperty("");
-    private final StringProperty placeholderKey = new SimpleStringProperty("");
+    protected final StringProperty placeholder = new SimpleStringProperty("");
+    protected final StringProperty placeholderKey = new SimpleStringProperty("");
 
     /**
      * Every field can be marked as {@code required} and {@code editable}. These
      * properties can change the field's behaviour.
      */
-    final StringProperty requiredErrorKey = new SimpleStringProperty("");
-    final StringProperty requiredError = new SimpleStringProperty("");
-    private final BooleanProperty required = new SimpleBooleanProperty(false);
-    private final BooleanProperty editable = new SimpleBooleanProperty(true);
+    protected final StringProperty requiredErrorKey = new SimpleStringProperty("");
+    protected final StringProperty requiredError = new SimpleStringProperty("");
+    protected final BooleanProperty required = new SimpleBooleanProperty(false);
+    protected final BooleanProperty editable = new SimpleBooleanProperty(true);
 
     /**
      * The field's current state is represented by the value properties, as
      * well as by the {@code valid} and {@code changed} flags.
      */
-    final BooleanProperty valid = new SimpleBooleanProperty(true);
-    final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
 
     /**
      * Fields can be styled using CSS through ID or class hooks.
      */
-    private final StringProperty id = new SimpleStringProperty(UUID.randomUUID().toString());
-    private final ListProperty<String> styleClass = new SimpleListProperty<>(FXCollections.observableArrayList());
-    private final IntegerProperty span = new SimpleIntegerProperty(12);
+    protected final StringProperty id = new SimpleStringProperty(UUID.randomUUID().toString());
+    protected final ListProperty<String> styleClass = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final IntegerProperty span = new SimpleIntegerProperty(12);
 
     /**
      * The results of the field's validation is stored in this property. After
@@ -120,8 +120,8 @@ public abstract class Field<F extends Field> {
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
-    final ListProperty<String> errorMessages = new SimpleListProperty<>(FXCollections.observableArrayList());
-    final ListProperty<String> errorMessageKeys = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ListProperty<String> errorMessages = new SimpleListProperty<>(FXCollections.observableArrayList());
+    protected final ListProperty<String> errorMessageKeys = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     /**
      * Additional descriptions for the field's label and value are stored in these properties.
@@ -141,15 +141,15 @@ public abstract class Field<F extends Field> {
      * The translation service is passed down from the containing section. It
      * is used to translate all translatable values of the field.
      */
-    TranslationService translationService;
+    protected TranslationService translationService;
 
-    SimpleControl<F> renderer;
+    protected SimpleControl<F> renderer;
 
     /**
      * With the continuous binding mode, values are always directly persisted
      * upon any changes.
      */
-    final InvalidationListener bindingModeListener = (observable) -> {
+    protected final InvalidationListener bindingModeListener = (observable) -> {
         if (validate()) {
             persist();
         }
@@ -166,7 +166,7 @@ public abstract class Field<F extends Field> {
      * @see Field::ofMultiSelectionType
      * @see Field::ofSingleSelectionType
      */
-    Field() {
+    protected Field() {
 
         // Whenever one of the translatable fields' keys change, update the
         // displayed value based on the new translation.
@@ -669,11 +669,11 @@ public abstract class Field<F extends Field> {
      * @param newValue
      *              The new binding mode for the current field.
      */
-    abstract void setBindingMode(BindingMode newValue);
+    public abstract void setBindingMode(BindingMode newValue);
 
-    abstract void persist();
+    public abstract void persist();
 
-    abstract void reset();
+    public abstract void reset();
 
     /**
      * This internal method is called by the containing section when a new
@@ -710,7 +710,7 @@ public abstract class Field<F extends Field> {
      * @param keyProperty
      *              The internal property that holds the translation key.
      */
-    void updateElement(StringProperty displayProperty, StringProperty keyProperty) {
+    protected void updateElement(StringProperty displayProperty, StringProperty keyProperty) {
 
         // If the key has not yet been set that means that the translation
         // service was added for the first time. We can simply set the key
@@ -760,7 +760,7 @@ public abstract class Field<F extends Field> {
      *
      * @return Returns whether the user input is a valid value or not.
      */
-    abstract boolean validate();
+    protected abstract boolean validate();
 
     public String getPlaceholder() {
         return placeholder.get();

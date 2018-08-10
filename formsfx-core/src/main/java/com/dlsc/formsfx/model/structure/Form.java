@@ -44,23 +44,23 @@ import java.util.stream.Collectors;
  */
 public class Form {
 
-    private final List<Group> groups = new ArrayList<>();
+    protected final List<Group> groups = new ArrayList<>();
 
     /**
      * The title acts as a description for the form.
      *
      * This property is translatable if a {@link TranslationService} is set.
      */
-    private final StringProperty title = new SimpleStringProperty("");
-    private final StringProperty titleKey = new SimpleStringProperty("");
+    protected final StringProperty title = new SimpleStringProperty("");
+    protected final StringProperty titleKey = new SimpleStringProperty("");
 
     /**
      * The form acts as a proxy for its contained sections' {@code changed}
      * and {@code valid} properties.
      */
-    private final BooleanProperty valid = new SimpleBooleanProperty(true);
-    private final BooleanProperty changed = new SimpleBooleanProperty(false);
-    private final BooleanProperty persistable = new SimpleBooleanProperty(false);
+    protected final BooleanProperty valid = new SimpleBooleanProperty(true);
+    protected final BooleanProperty changed = new SimpleBooleanProperty(false);
+    protected final BooleanProperty persistable = new SimpleBooleanProperty(false);
 
     /**
      * A form can optionally have a translation service. This service is used to
@@ -69,8 +69,8 @@ public class Form {
      *
      * @see TranslationService
      */
-    private final ObjectProperty<TranslationService> translationService = new SimpleObjectProperty<>();
-    private final Runnable localeChangeListener = this::translate;
+    protected final ObjectProperty<TranslationService> translationService = new SimpleObjectProperty<>();
+    protected final Runnable localeChangeListener = this::translate;
 
     /**
      * Internal constructor for the {@code Form} class. To create new
@@ -184,7 +184,7 @@ public class Form {
      *
      * @see Group::translate
      */
-    private void translate() {
+    protected void translate() {
         TranslationService tr = translationService.get();
 
         if (!isI18N()) {
@@ -230,7 +230,7 @@ public class Form {
      * Sets this form's {@code changed} property based on its contained
      * groups' changed properties.
      */
-    private void setChangedProperty() {
+    protected void setChangedProperty() {
         changed.setValue(groups.stream().anyMatch(Group::hasChanged));
         setPersistableProperty();
     }
@@ -239,7 +239,7 @@ public class Form {
      * Sets this form's {@code valid} property based on its contained groups'
      * changed properties.
      */
-    private void setValidProperty() {
+    protected void setValidProperty() {
         valid.setValue(groups.stream().allMatch(Group::isValid));
         setPersistableProperty();
     }
@@ -248,7 +248,7 @@ public class Form {
      * Sets this form's {@code persistable} property based on its contained
      * groups' persistable properties.
      */
-    private void setPersistableProperty() {
+    protected void setPersistableProperty() {
         persistable.setValue(groups.stream().anyMatch(Group::hasChanged) && groups.stream().allMatch(Group::isValid));
     }
 

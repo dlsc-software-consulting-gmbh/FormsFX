@@ -39,7 +39,7 @@ public class SectionRenderer extends GroupRendererBase<Section> {
      * @param section
      *              The section which gets rendered.
      */
-    SectionRenderer(Section section) {
+    protected SectionRenderer(Section section) {
         this.element = section;
         init();
     }
