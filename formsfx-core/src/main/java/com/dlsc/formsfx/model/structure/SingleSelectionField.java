@@ -186,7 +186,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
 
     /**
      * Binds the given items and selection property with the corresponding
-     * fields.
+     * elements.
      *
      * @param itemsBinding
      *          The items property to be bound with.
@@ -205,7 +205,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
 
     /**
      * Unbinds the given items and selection property with the corresponding
-     * fields.
+     * elements.
      *
      * @param itemsBinding
      *          The items property to be unbound with.

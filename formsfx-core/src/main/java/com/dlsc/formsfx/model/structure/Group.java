@@ -37,7 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * A group is the intermediate unit in a form. It is used to group form
- * fields to a larger unit. It also acts as a proxy to some properties of
+ * elements to a larger unit. It also acts as a proxy to some properties of
  * the contained data, such as validity or changes.
  *
  * @author Sacha Schmid
@@ -45,10 +45,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class Group {
 
-    protected final List<Field> fields = new ArrayList<>();
+    protected final List<Element> elements = new ArrayList<>();
 
     /**
-     * The group acts as a proxy for its contained fields' {@code changed}
+     * The group acts as a proxy for its contained elements' {@code changed}
      * and {@code valid} properties.
      */
     protected final BooleanProperty valid = new SimpleBooleanProperty(true);
@@ -68,43 +68,49 @@ public class Group {
      *
      * @see Group::of
      *
-     * @param fields
-     *              A varargs list of fields that are contained in this
+     * @param elements
+     *              A varargs list of elements that are contained in this
      *              group.
      */
-    protected Group(Field... fields) {
-        Collections.addAll(this.fields, fields);
+    protected Group(Element... elements) {
+        Collections.addAll(this.elements, elements);
 
-        // If any of the fields are marked as changed, the group is updated
+        // If any of the elements are marked as changed, the group is updated
         // accordingly.
 
-        this.fields.forEach(f -> f.changedProperty().addListener((observable, oldValue, newValue) -> setChangedProperty()));
+        this.elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.changedProperty().addListener((observable, oldValue, newValue) -> setChangedProperty()));
 
-        // If any of the fields are marked as invalid, the group is updated
+        // If any of the elements are marked as invalid, the group is updated
         // accordingly.
 
-        this.fields.forEach(f -> f.validProperty().addListener((observable, oldValue, newValue) -> setValidProperty()));
+        this.elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.validProperty().addListener((observable, oldValue, newValue) -> setValidProperty()));
 
         setValidProperty();
         setChangedProperty();
     }
 
     /**
-     * Creates a new group containing the given fields.
+     * Creates a new group containing the given elements.
      *
-     * @param fields
-     *              The fields to be included in the group.
+     * @param elements
+     *              The elements to be included in the group.
      *
      * @return Returns a new {@code Group}.
      */
-    public static Group of(Field... fields) {
-        return new Group(fields);
+    public static Group of(Element... elements) {
+        return new Group(elements);
     }
 
     /**
      * This internal method is called by the containing form when a new
      * translation has been added to the form. Also applies the translation
-     * to all contained fields.
+     * to all contained elements.
      *
      * @see Field::translate
      *
@@ -118,11 +124,14 @@ public class Group {
             return;
         }
 
-        fields.forEach(f -> f.translate(translationService));
+        elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .forEach(f -> f.translate(translationService));
     }
 
     /**
-     * Persists the values for all contained fields.
+     * Persists the values for all contained elements.
      * @see Field::persist
      */
     public void persist() {
@@ -130,13 +139,16 @@ public class Group {
             return;
         }
 
-        fields.forEach(Field::persist);
+        elements.stream()
+            .filter(e -> e instanceof FormElement)
+            .map(e -> (FormElement) e)
+            .forEach(FormElement::persist);
 
         fireEvent(GroupEvent.groupPersistedEvent(this));
     }
 
     /**
-     * Resets the values for all contained fields.
+     * Resets the values for all contained elements.
      * @see Field::reset
      */
     public void reset() {
@@ -144,29 +156,36 @@ public class Group {
             return;
         }
 
-        fields.forEach(Field::reset);
-
-        fireEvent(GroupEvent.groupResetEvent(this));
+        elements.stream()
+            .filter(e -> e instanceof FormElement)
+            .map(e -> (FormElement) e)
+            .forEach(FormElement::reset);
     }
 
     /**
      * Sets this group's {@code changed} property based on its contained
-     * fields' changed properties.
+     * elements' changed properties.
      */
-    protected void setChangedProperty() {
-        changed.setValue(fields.stream().anyMatch(Field::hasChanged));
+    private void setChangedProperty() {
+        changed.setValue(elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .anyMatch(Field::hasChanged));
     }
 
     /**
-     * Sets this group's {@code valid} property based on its contained fields'
+     * Sets this group's {@code valid} property based on its contained elements'
      * changed properties.
      */
-    protected void setValidProperty() {
-        valid.setValue(fields.stream().allMatch(Field::isValid));
+    private void setValidProperty() {
+        valid.setValue(elements.stream()
+            .filter(e -> e instanceof Field)
+            .map(e -> (Field) e)
+            .allMatch(Field::isValid));
     }
 
-    public List<Field> getFields() {
-        return fields;
+    public List<Element> getElements() {
+        return elements;
     }
 
     public boolean hasChanged() {

@@ -64,7 +64,7 @@ public class FormTest {
                 )
         );
 
-        Assert.assertEquals(6, f.getFields().size());
+        Assert.assertEquals(6, f.getElements().size());
         Assert.assertEquals(4, f.getGroups().size());
     }
 

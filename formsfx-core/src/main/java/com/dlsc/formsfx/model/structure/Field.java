@@ -24,7 +24,6 @@ import com.dlsc.formsfx.model.event.FieldEvent;
 import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import com.dlsc.formsfx.view.controls.SimpleControl;
-import com.dlsc.formsfx.view.util.ColSpan;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -38,6 +37,10 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
@@ -51,6 +54,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +68,7 @@ import java.util.stream.Collectors;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public abstract class Field<F extends Field> {
+public abstract class Field<F extends Field<F>> extends Element<F> implements FormElement {
 
     /**
      * The label acts as a description for the field. It is always visible to
@@ -164,7 +168,7 @@ public abstract class Field<F extends Field> {
     };
 
     /**
-     * Internal constructor for the {@code Field} class. To create new fields,
+     * Internal constructor for the {@code Field} class. To create new elements,
      * see the static factory methods in this class.
      *
      * @see Field::ofStringType
@@ -176,7 +180,7 @@ public abstract class Field<F extends Field> {
      */
     protected Field() {
 
-        // Whenever one of the translatable fields' keys change, update the
+        // Whenever one of the translatable elements' keys change, update the
         // displayed value based on the new translation.
 
         labelKey.addListener((observable, oldValue, newValue) -> label.setValue(translationService.translate(newValue)));
@@ -360,7 +364,7 @@ public abstract class Field<F extends Field> {
      *
      * @return Returns a new {@link MultiSelectionField}.
      */
-    public static <T> MultiSelectionField ofMultiSelectionType(ListProperty<T> itemsBinding, ListProperty<T> selectionBinding) {
+    public static <T> MultiSelectionField<T> ofMultiSelectionType(ListProperty<T> itemsBinding, ListProperty<T> selectionBinding) {
         return new MultiSelectionField<>(new SimpleListProperty<>(itemsBinding.getValue()), new ArrayList<>(selectionBinding.getValue().stream().map(t -> itemsBinding.getValue().indexOf(t)).collect(Collectors.toList()))).bind(itemsBinding, selectionBinding);
     }
 
@@ -606,32 +610,6 @@ public abstract class Field<F extends Field> {
     }
 
     /**
-     * Sets the id property of the current field.
-     *
-     * @param newValue
-     *              The new value for the id property.
-     *
-     * @return Returns the current field to allow for chaining.
-     */
-    public F id(String newValue) {
-        id.set(newValue);
-        return (F) this;
-    }
-
-    /**
-     * Sets the style classes for the current field.
-     *
-     * @param newValue
-     *              The new style classes.
-     *
-     * @return Returns the current field to allow for chaining.
-     */
-    public F styleClass(String... newValue) {
-        styleClass.setAll(newValue);
-        return (F) this;
-    }
-
-    /**
      * Sets the control that renders this field.
      *
      * @param newValue
@@ -645,32 +623,6 @@ public abstract class Field<F extends Field> {
     }
 
     /**
-     * Sets the amount of columns the field takes up inside the section grid.
-     *
-     * @param newValue
-     *              The new number of columns.
-     *
-     * @return Returns the current field to allow for chaining.
-     */
-    public F span(int newValue) {
-        span.setValue(newValue);
-        return (F) this;
-    }
-
-    /**
-     * Sets the amount of columns the field takes up inside the section grid.
-     *
-     * @param newValue
-     *              The new span fraction.
-     *
-     * @return Returns the current field to allow for chaining.
-     */
-    public F span(ColSpan newValue) {
-        span.setValue(newValue.valueOf());
-        return (F) this;
-    }
-
-    /**
      * Activates or deactivates the {@code bindingModeListener} based on the
      * given {@code BindingMode}.
      *
@@ -679,9 +631,9 @@ public abstract class Field<F extends Field> {
      */
     public abstract void setBindingMode(BindingMode newValue);
 
-    public abstract void persist();
+    // abstract void persist();
 
-    public abstract void reset();
+    // abstract void reset();
 
     /**
      * This internal method is called by the containing section when a new
@@ -828,30 +780,6 @@ public abstract class Field<F extends Field> {
 
     public boolean isI18N() {
         return translationService != null;
-    }
-
-    public int getSpan() {
-        return span.get();
-    }
-
-    public IntegerProperty spanProperty() {
-        return span;
-    }
-
-    public String getID() {
-        return id.get();
-    }
-
-    public StringProperty idProperty() {
-        return id;
-    }
-
-    public ObservableList<String> getStyleClass() {
-        return styleClass.get();
-    }
-
-    public ListProperty<String> styleClassProperty() {
-        return styleClass;
     }
 
     public SimpleControl<F> getRenderer() {

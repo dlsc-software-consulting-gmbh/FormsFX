@@ -44,8 +44,8 @@ import java.util.stream.Collectors;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public abstract class DataField<P extends Property, V, F extends Field> extends Field<F> {
-
+public abstract class DataField<P extends Property, V, F extends Field<F>> extends Field<F> {
+  
     /**
      * Every field tracks its value in multiple ways.
      *
@@ -90,7 +90,7 @@ public abstract class DataField<P extends Property, V, F extends Field> extends 
 
     /**
      * Internal constructor for the {@code DataField} class. To create new
-     * fields, see the static factory methods in {@code Field}.
+     * elements, see the static factory methods in {@code Field}.
      *
      * @see Field::ofStringType
      * @see Field::ofIntegerType
@@ -115,7 +115,7 @@ public abstract class DataField<P extends Property, V, F extends Field> extends 
 
         changed.bind(Bindings.createBooleanBinding(() -> !String.valueOf(persistentValue.getValue()).equals(userInput.getValue()), userInput, persistentValue));
 
-        // Whenever one of the translatable fields' keys change, update the
+        // Whenever one of the translatable elements' keys change, update the
         // displayed value based on the new translation.
 
         formatErrorKey.addListener((observable, oldValue, newValue) -> formatError.setValue(translationService.translate(newValue)));

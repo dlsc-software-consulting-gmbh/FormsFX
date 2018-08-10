@@ -189,7 +189,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
 
     /**
      * Binds the given items and selection property with the corresponding
-     * fields.
+     * elements.
      *
      * @param itemsBinding
      *          The items property to be bound with.
@@ -208,7 +208,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
 
     /**
      * Unbinds the given items and selection property with the corresponding
-     * fields.
+     * elements.
      *
      * @param itemsBinding
      *          The items property to be unbound with.
