@@ -304,9 +304,9 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
         String newValue = userInput.getValue();
 
         if (!validateRequired(newValue)) {
-            if (isI18N() && requiredErrorKey.get() != null) {
+            if (isI18N() && !requiredErrorKey.get().isEmpty()) {
                 errorMessageKeys.setAll(requiredErrorKey.get());
-            } else if (requiredError.get() != null) {
+            } else if (!requiredError.get().isEmpty()) {
                 errorMessages.setAll(requiredError.get());
             }
 
