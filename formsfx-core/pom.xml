@@ -7,9 +7,9 @@
     <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.3.0</version>
+    <version>10.3.0</version>
 
-    <name>FormsFX</name>
+    <name>FormsFX Core</name>
     <description>A framework for quickly creating form-based UIs.</description>
     <url>https://github.com/dlemmermann/formsfx</url>
     <licenses>
