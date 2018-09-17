@@ -8,5 +8,5 @@ cache:
 before_script:
   - mvn -v
 script:  mvn package
-jdk: oraclejdk8
+jdk: oraclejdk10
 env: TERM=dumb
