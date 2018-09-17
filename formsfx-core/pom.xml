@@ -72,14 +72,13 @@
                     <force>true</force>
                     <windowtitle>FormsFX API</windowtitle>
                     <detectLinks>true</detectLinks>
+                    <javadocExecutable>/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/Home/bin/javadoc</javadocExecutable>
                     <links>
                         <link>http://docs.oracle.com/javase/10/docs/api/</link>
                         <link>http://docs.oracle.com/javase/10/javafx/api/</link>
                         <link>http://controlsfx.bitbucket.org</link>
                     </links>
-                    <additionalJOption>-J-Djavafx.javadoc=true
-                    </additionalJOption>
-                    <failOnError>false</failOnError>
+                    <additionalJOption>-J-Djavafx.javadoc=true</additionalJOption>
                     <docfilessubdirs>true</docfilessubdirs>
                 </configuration>
                 <executions>
