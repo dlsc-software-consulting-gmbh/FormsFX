@@ -41,6 +41,16 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>10</source>
+                    <target>10</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>3.0.1</version>
                 <executions>
@@ -55,26 +65,16 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>3.0.1</version>
                 <configuration>
                     <failOnError>false</failOnError>
                     <force>true</force>
                     <windowtitle>FormsFX API</windowtitle>
                     <detectLinks>true</detectLinks>
                     <links>
-                        <link>http://docs.oracle.com/javase/8/docs/api/</link>
-                        <link>http://docs.oracle.com/javase/8/javafx/api/</link>
+                        <link>http://docs.oracle.com/javase/10/docs/api/</link>
+                        <link>http://docs.oracle.com/javase/10/javafx/api/</link>
                         <link>http://controlsfx.bitbucket.org</link>
                     </links>
                     <additionalJOption>-J-Djavafx.javadoc=true
@@ -105,7 +105,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>license-maven-plugin</artifactId>
-                <version>1.14</version>
+                <version>1.16</version>
                 <configuration>
                     <licenseName>apache20</licenseName>
                     <licenseResolver>${project.baseUri}/src/license

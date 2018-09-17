@@ -27,6 +27,7 @@ import com.dlsc.formsfx.model.structure.Section;
 import com.dlsc.formsfx.view.controls.SimpleCheckBoxControl;
 import com.dlsc.formsfx.view.controls.SimpleRadioButtonControl;
 import com.dlsc.formsfx.view.controls.SimpleTextControl;
+import javafx.application.Platform;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
 import org.junit.Assert;
@@ -43,8 +44,12 @@ import java.util.Collections;
 public class RendererTest {
 
     @BeforeClass
-    public static void before() {
-        com.sun.javafx.application.PlatformImpl.startup(() -> {});
+    public static void before() throws IllegalStateException {
+        try {
+            Platform.startup(() -> {});
+        } catch (IllegalStateException ex) {
+            // JavaFX may only be initialized once.
+        }
     }
 
     @Test
