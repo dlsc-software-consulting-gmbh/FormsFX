@@ -73,7 +73,11 @@ public final class DemoModel {
                                 .validate(StringLengthValidator.exactly(2, "ISO_3166_error_message")),
                         Field.ofBooleanType(country.independenceProperty())
                                 .label("independent_label")
+                                .required("required_error_message"),
+                        Field.ofDate(country.getIndependenceDay())
+                                .label("independent_since_label")
                                 .required("required_error_message")
+                                .placeholder("independent_since_placeholder")
                 ),
                 Section.of(
                         Field.ofStringType(country.currencyShortProperty())
