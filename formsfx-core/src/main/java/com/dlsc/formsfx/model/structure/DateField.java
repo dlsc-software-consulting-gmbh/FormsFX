@@ -22,6 +22,8 @@ package com.dlsc.formsfx.model.structure;
 
 import com.dlsc.formsfx.view.controls.SimpleDateControl;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.util.converter.LocalDateStringConverter;
 
 import java.time.LocalDate;
@@ -53,8 +55,8 @@ public class DateField extends DataField<ObjectProperty<LocalDate>, LocalDate, D
         Chronology chronology = Chronology.ofLocale(Locale.getDefault(Locale.Category.FORMAT));
         stringConverter = new LocalDateStringConverter(FormatStyle.SHORT, null, chronology);
         renderer = new SimpleDateControl();
-
-        userInput.set(this.stringConverter.toString(value.getValue()));
+        userInput.setValue(null);
+        userInput.setValue(stringConverter.toString((LocalDate) persistentValue.getValue()));
     }
 
     @Override
