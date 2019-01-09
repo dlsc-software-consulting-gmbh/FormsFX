@@ -12,7 +12,7 @@ To use this framework as part of your Maven build simply add the following depen
 <dependency>
   <groupId>com.dlsc.formsfx</groupId>
   <artifactId>formsfx-core</artifactId>
-  <version>11.3.1</version>
+  <version>11.3.2</version>
 </dependency>
 ```
 

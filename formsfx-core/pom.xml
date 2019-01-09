@@ -7,7 +7,7 @@
     <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx-core</artifactId>
     <packaging>jar</packaging>
-    <version>11.3.1</version>
+    <version>11.3.2</version>
 
     <name>FormsFX Core</name>
     <description>A framework for quickly creating form-based UIs.</description>
@@ -152,13 +152,13 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11</version>
+            <version>11.0.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
+            <version>11.0.1</version>
         </dependency>
 
         <!-- Test Dependencies -->
