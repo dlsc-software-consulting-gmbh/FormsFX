@@ -25,19 +25,10 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.util.TranslationService;
 import com.dlsc.formsfx.view.controls.SimpleControl;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -410,6 +401,26 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      */
     public static <T> SingleSelectionField<T> ofSingleSelectionType(ListProperty<T> itemsBinding, ObjectProperty<T> selectionBinding) {
         return new SingleSelectionField<>(new SimpleListProperty<>(itemsBinding.getValue()), itemsBinding.indexOf(selectionBinding.getValue())).bind(itemsBinding, selectionBinding);
+    }
+
+    /**
+     * Creates a new {@link DateField} with given default value
+     *
+     * @param defaultValue The initial value and persistent value of the field.
+     * @return Returns a new {@link DateField}.
+     */
+    public static DateField ofDate(LocalDate defaultValue) {
+        return new DateField(new SimpleObjectProperty<>(defaultValue), new SimpleObjectProperty<>(defaultValue));
+    }
+
+    /**
+     * Creates a new {@link DateField} with given property
+     *
+     * @param binding The property from the model to be bound with.
+     * @return Returns a new {@link DateField}.
+     */
+    public static DateField ofDate(ObjectProperty<LocalDate> binding) {
+        return new DateField(new SimpleObjectProperty<>(binding.getValue()), new SimpleObjectProperty<>(binding.getValue())).bind(binding);
     }
 
     /**
