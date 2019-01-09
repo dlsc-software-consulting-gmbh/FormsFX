@@ -76,11 +76,10 @@
                     <force>true</force>
                     <windowtitle>FormsFX API</windowtitle>
                     <detectLinks>true</detectLinks>
-                    <javadocExecutable>/Library/Java/JavaVirtualMachines/jdk-10.jdk/Contents/Home/bin/javadoc</javadocExecutable>
+                    <javadocExecutable>/Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home/bin/javadoc</javadocExecutable>
                     <links>
                         <link>http://docs.oracle.com/javase/10/docs/api/</link>
                         <link>http://docs.oracle.com/javase/10/javafx/api/</link>
-                        <link>http://controlsfx.bitbucket.org</link>
                     </links>
                     <additionalJOption>-J-Djavafx.javadoc=true</additionalJOption>
                     <docfilessubdirs>true</docfilessubdirs>
@@ -113,9 +112,9 @@
                     <licenseName>apache20</licenseName>
                     <licenseResolver>${project.baseUri}/src/license
                     </licenseResolver>
-                    <organizationName>DLSC Software &amp; Consulting
+                    <organizationName>DLSC Software &amp; Consulting GmbH
                     </organizationName>
-                    <inceptionYear>2017</inceptionYear>
+                    <inceptionYear>2019</inceptionYear>
                     <projectName>FormsFX</projectName>
                     <processStartTag>
                         ========================LICENSE_START=================================
@@ -153,13 +152,13 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11-ea+25</version>
+            <version>11</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11-ea+25</version>
+            <version>11</version>
         </dependency>
 
         <!-- Test Dependencies -->
