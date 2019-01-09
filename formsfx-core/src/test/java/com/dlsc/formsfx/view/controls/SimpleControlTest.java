@@ -24,7 +24,6 @@ import com.dlsc.formsfx.model.structure.Field;
 import com.dlsc.formsfx.model.structure.MultiSelectionField;
 import com.dlsc.formsfx.model.structure.SingleSelectionField;
 import com.dlsc.formsfx.model.structure.StringField;
-import javafx.application.Platform;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
@@ -45,11 +44,7 @@ public class SimpleControlTest {
 
     @BeforeClass
     public static void before() {
-        try {
-            Platform.startup(() -> {});
-        } catch (IllegalStateException ex) {
-            // JavaFX may only be initialized once.
-        }
+        com.sun.javafx.application.PlatformImpl.startup(() -> {});
     }
 
     @Test

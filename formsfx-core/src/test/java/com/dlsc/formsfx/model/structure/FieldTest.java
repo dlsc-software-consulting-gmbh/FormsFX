@@ -9,9 +9,9 @@ package com.dlsc.formsfx.model.structure;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *        http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,6 @@ package com.dlsc.formsfx.model.structure;
 
 import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.util.ColSpan;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -51,18 +50,14 @@ public class FieldTest {
 
     @BeforeClass
     public static void beforeClass() {
-        try {
-            Platform.startup(() -> {});
-        } catch (IllegalStateException ex) {
-            // JavaFX may only be initialized once.
-        }
+        com.sun.javafx.application.PlatformImpl.startup(() -> {});
     }
 
     @Test
     public void validTest() {
         StringField s = Field.ofStringType("test");
 
-        final int[] changes = {0};
+        final int[] changes = { 0 };
 
         s.validProperty().addListener((observable, oldValue, newValue) -> changes[0] += 1);
 
