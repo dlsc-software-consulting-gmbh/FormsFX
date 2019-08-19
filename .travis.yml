@@ -8,6 +8,10 @@ env:
     - TAG_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
     - TERM=dumb
 
+before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
 # Necessary environment variables on Travis CI:
 #
 # GITHUB_TOKEN: Token from here: https://github.com/settings/tokens => with scope "public_repo"
