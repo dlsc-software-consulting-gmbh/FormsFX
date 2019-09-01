@@ -1,5 +1,8 @@
 # Change Log
 
+## [11.4.1](https://github.com/dlsc-software-consulting-gmbh/formsfx/tree/11.4.1) (2019-09-01)
+[Full Changelog](https://github.com/dlsc-software-consulting-gmbh/formsfx/compare/8.4.0...11.4.1)
+
 ## [8.4.0](https://github.com/dlsc-software-consulting-gmbh/formsfx/tree/8.4.0) (2019-08-25)
 [Full Changelog](https://github.com/dlsc-software-consulting-gmbh/formsfx/compare/11.4.0...8.4.0)
 
