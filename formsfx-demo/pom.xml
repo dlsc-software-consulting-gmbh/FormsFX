@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.dlsc.formsfx</groupId>
 		<artifactId>formsfx</artifactId>
-		<version>1.3.1</version>
+		<version>8.4.0</version>
 	</parent>
 
     <packaging>jar</packaging>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.dlsc.formsfx</groupId>
             <artifactId>formsfx-core</artifactId>
-            <version>1.3.1</version>
+            <version>8.4.0</version>
         </dependency>
     </dependencies>
 
