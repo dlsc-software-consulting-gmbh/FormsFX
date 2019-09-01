@@ -22,7 +22,7 @@ package com.dlsc.formsfx.model.structure;
 
 import com.dlsc.formsfx.view.controls.SimpleDoubleControl;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.Property;
 
 /**
  * This class provides an implementation of a {@link Field} containing a
@@ -31,7 +31,7 @@ import javafx.beans.property.SimpleDoubleProperty;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public class DoubleField extends DataField<DoubleProperty, Double, DoubleField> {
+public class DoubleField extends DataField<Double, DoubleField> {
 
     /**
      * The constructor of {@code DoubleField}.
@@ -43,8 +43,8 @@ public class DoubleField extends DataField<DoubleProperty, Double, DoubleField> 
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    protected DoubleField(SimpleDoubleProperty valueProperty, SimpleDoubleProperty persistentValueProperty) {
-        super(valueProperty, persistentValueProperty);
+    protected DoubleField(DoubleProperty valueProperty, DoubleProperty persistentValueProperty) {
+        super((Property<Double>) (Property)valueProperty, (Property<Double>) (Property)persistentValueProperty);
 
         stringConverter = new AbstractStringConverter<Double>() {
             @Override

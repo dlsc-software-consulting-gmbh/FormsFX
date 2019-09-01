@@ -32,15 +32,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Labeled;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -264,7 +261,7 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      * @return Returns a new {@link DoubleField}.
      */
     public static DoubleField ofDoubleType(DoubleProperty binding) {
-        return new DoubleField(new SimpleDoubleProperty(binding.getValue()), new SimpleDoubleProperty(binding.getValue())).bind(binding);
+        return new DoubleField(new SimpleDoubleProperty(binding.getValue()), new SimpleDoubleProperty(binding.getValue())).bind((Property<Double>) (Property)binding);
     }
 
     /**
@@ -288,7 +285,7 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      * @return Returns a new {@link IntegerField}.
      */
     public static IntegerField ofIntegerType(IntegerProperty binding) {
-        return new IntegerField(new SimpleIntegerProperty(binding.getValue()), new SimpleIntegerProperty(binding.getValue())).bind(binding);
+        return new IntegerField(new SimpleIntegerProperty(binding.getValue()), new SimpleIntegerProperty(binding.getValue())).bind((Property<Integer>) (Property)binding);
     }
 
     /**

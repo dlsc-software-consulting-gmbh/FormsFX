@@ -24,7 +24,6 @@ import com.dlsc.formsfx.view.controls.SimpleTextControl;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 /**
  * This class provides an implementation of a {@link Field} containing a
@@ -33,7 +32,7 @@ import javafx.beans.property.StringProperty;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public class StringField extends DataField<StringProperty, String, StringField> {
+public class StringField extends DataField<String, StringField> {
 
     protected final BooleanProperty multiline = new SimpleBooleanProperty(false);
 

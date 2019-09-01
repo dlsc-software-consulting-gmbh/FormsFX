@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public abstract class DataField<P extends Property, V, F extends Field<F>> extends Field<F> {
+public abstract class DataField<V, F extends Field<F>> extends Field<F> {
   
     /**
      * Every field tracks its value in multiple ways.
@@ -59,8 +59,8 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *   is the responsibility of the form creator to persist the field values
      *   at the correct time.
      */
-    protected final P value;
-    protected final P persistentValue;
+    protected final Property<V> value;
+    protected final Property<V> persistentValue;
     protected final StringProperty userInput = new SimpleStringProperty("");
 
     /**
@@ -96,7 +96,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * This listener updates the field when the external binding changes.
      */
-    private final InvalidationListener externalBindingListener = (observable) -> userInput.setValue(stringConverter.toString((V) ((P) observable).getValue()));
+    private final InvalidationListener externalBindingListener = (observable) -> userInput.setValue(stringConverter.toString(((Property<V>) observable).getValue()));
 
     /**
      * Internal constructor for the {@code DataField} class. To create new
@@ -114,7 +114,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *              The property that is used to store the latest persisted
      *              value of the field.
      */
-    protected DataField(P valueProperty, P persistentValueProperty) {
+    protected DataField(Property<V> valueProperty, Property<V> persistentValueProperty) {
         value = valueProperty;
         persistentValue = persistentValueProperty;
 
@@ -295,7 +295,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *
      * @return Returns the current field to allow for chaining.
      */
-    public F bind(P binding) {
+    public F bind(Property<V> binding) {
         persistentValue.bindBidirectional(binding);
         binding.addListener(externalBindingListener);
 
@@ -310,7 +310,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *
      * @return Returns the current field to allow for chaining.
      */
-    public F unbind(P binding) {
+    public F unbind(Property<V> binding) {
         persistentValue.unbindBidirectional(binding);
         binding.removeListener(externalBindingListener);
 
@@ -455,7 +455,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
         return (V) value.getValue();
     }
 
-    public P valueProperty() {
+    public Property<V> valueProperty() {
         return value;
     }
 

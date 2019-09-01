@@ -21,11 +21,7 @@ package com.dlsc.formsfx.model.structure;
  */
 
 import com.dlsc.formsfx.view.controls.SimplePasswordControl;
-import com.dlsc.formsfx.view.controls.SimpleTextControl;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 
 /**
  * This class provides an implementation of a {@link Field} containing a
@@ -33,7 +29,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Andres Almiray
  */
-public class PasswordField extends DataField<StringProperty, String, PasswordField> {
+public class PasswordField extends DataField<String, PasswordField> {
     /**
      * The constructor of {@code PasswordField}.
      *

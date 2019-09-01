@@ -22,8 +22,7 @@ package com.dlsc.formsfx.model.structure;
 
 import com.dlsc.formsfx.view.controls.SimpleDateControl;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.Property;
 import javafx.util.converter.LocalDateStringConverter;
 
 import java.time.LocalDate;
@@ -36,7 +35,7 @@ import java.util.Locale;
  *
  * @author Tomasz Krzemiński
  */
-public class DateField extends DataField<ObjectProperty<LocalDate>, LocalDate, DateField> {
+public class DateField extends DataField<LocalDate, DateField> {
     /**
      * Internal constructor for the {@code DataField} class. To create new
      * elements, see the static factory methods in {@code Field}.
@@ -56,11 +55,11 @@ public class DateField extends DataField<ObjectProperty<LocalDate>, LocalDate, D
         stringConverter = new LocalDateStringConverter(FormatStyle.SHORT, null, chronology);
         renderer = new SimpleDateControl();
         userInput.setValue(null);
-        userInput.setValue(stringConverter.toString((LocalDate) persistentValue.getValue()));
+        userInput.setValue(stringConverter.toString(persistentValue.getValue()));
     }
 
     @Override
-    public DateField bind(ObjectProperty<LocalDate> binding) {
+    public DateField bind(Property<LocalDate> binding) {
         return super.bind(binding);
 
     }

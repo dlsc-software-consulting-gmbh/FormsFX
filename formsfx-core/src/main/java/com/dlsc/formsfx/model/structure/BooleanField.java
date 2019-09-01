@@ -21,9 +21,7 @@ package com.dlsc.formsfx.model.structure;
  */
 
 import com.dlsc.formsfx.view.controls.SimpleBooleanControl;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.util.StringConverter;
 
 /**
  * This class provides an implementation of a {@link Field} containing a
@@ -32,7 +30,7 @@ import javafx.util.StringConverter;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
-public class BooleanField extends DataField<BooleanProperty, Boolean, BooleanField> {
+public class BooleanField extends DataField<Boolean, BooleanField> {
 
     /**
      * The constructor of {@code BooleanField}.
