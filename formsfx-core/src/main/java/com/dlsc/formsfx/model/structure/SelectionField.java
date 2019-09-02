@@ -106,7 +106,7 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
         return true;
     }
 
-    public ObservableList getItems() {
+    public ObservableList<V> getItems() {
         return items.get();
     }
 
