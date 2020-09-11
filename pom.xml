@@ -15,6 +15,11 @@
     </modules>
 
     <properties>
+        <sonar.projectKey>dlsc-software-consulting-gmbh_FormsFX
+        </sonar.projectKey>
+        <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
