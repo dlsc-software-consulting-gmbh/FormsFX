@@ -20,8 +20,7 @@
     </modules>
 
     <properties>
-        <sonar.projectKey>dlsc-software-consulting-gmbh_FormsFX
-        </sonar.projectKey>
+        <sonar.projectKey>dlsc-software-consulting-gmbh_FormsFX</sonar.projectKey>
         <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
