@@ -33,6 +33,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -41,6 +42,7 @@ import java.util.Arrays;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
+@Ignore
 public class SimpleControlTest {
 
     @BeforeClass
