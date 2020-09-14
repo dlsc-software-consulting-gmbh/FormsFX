@@ -47,6 +47,7 @@ import java.util.Arrays;
  * @author Sacha Schmid
  * @author Rinesch Murugathas
  */
+@Ignore
 public class FieldTest {
 
     @BeforeClass
