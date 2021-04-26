@@ -14,6 +14,16 @@
         <maven>3.5.2</maven>
     </prerequisites>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-dlsc-oss-repository</id>
+            <name>dlsc-oss-repository</name>
+            <url>
+                https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1
+            </url>
+        </repository>
+    </distributionManagement>
+
     <modules>
         <module>formsfx-core</module>
         <module>formsfx-demo</module>
@@ -25,7 +35,6 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.deploy.skip>true</maven.deploy.skip>
         <javafx.version>16</javafx.version>
     </properties>
 
