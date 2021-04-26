@@ -7,7 +7,13 @@
     <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx-core</artifactId>
     <packaging>jar</packaging>
-    <version>11.4.1</version>
+    <version>11.4.2</version>
+
+    <parent>
+        <groupId>com.dlsc.formsfx</groupId>
+        <artifactId>formsfx</artifactId>
+        <version>11.4.2</version>
+    </parent>
 
     <name>FormsFX Core</name>
     <description>A framework for quickly creating form-based UIs.</description>
@@ -56,7 +62,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -70,7 +76,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <configuration>
                     <failOnError>false</failOnError>
                     <force>true</force>
@@ -182,13 +188,13 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->
