@@ -4,25 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <name>FormsFX</name>
+    <parent>
+        <groupId>com.dlsc</groupId>
+        <artifactId>dlsc-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx</artifactId>
     <packaging>pom</packaging>
-    <version>11.4.2</version>
+    <version>11.4.3-SNAPSHOT</version>
 
-    <prerequisites>
-        <maven>3.5.2</maven>
-    </prerequisites>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>
-                https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1
-            </url>
-        </repository>
-    </distributionManagement>
+    <name>FormsFX</name>
+    <url>https://github.com/dlsc-software-consulting-gmbh/formsfx</url>
+    <inceptionYear>2017</inceptionYear>
 
     <modules>
         <module>formsfx-core</module>
@@ -30,29 +25,15 @@
     </modules>
 
     <properties>
+        <project.identifier>formsfx</project.identifier>
+        <project.github.repository>dlsc-software-consulting-gmbh/formsfx</project.github.repository>
         <sonar.projectKey>dlsc-software-consulting-gmbh_FormsFX</sonar.projectKey>
-        <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>16</javafx.version>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                    <release>11</release>
-                </configuration>
-            </plugin>
-
-        </plugins>
-    </build>
 
     <dependencies>
 
@@ -61,10 +42,60 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jreleaser</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jreleaser</groupId>
+                        <artifactId>jreleaser-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <jreleaser>
+                                <release>
+                                    <github>
+                                        <branch>master-11</branch>
+                                        <tagName>{{projectVersion}}</tagName>
+                                        <skipTag>true</skipTag>
+                                        <changelog>
+                                            <formatted>ALWAYS</formatted>
+                                            <format>- {{commitShortHash}} {{commitTitle}}</format>
+                                            <contributors>
+                                                <format>* {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}</format>
+                                            </contributors>
+                                            <hide>
+                                                <categories>Merge</categories>
+                                                <contributors>GitHub,dependabot,Travis CI</contributors>
+                                            </hide>
+                                            <labelers>
+                                                <labeler>
+                                                    <title>Merge</title>
+                                                    <label>merge</label>
+                                                </labeler>
+                                            </labelers>
+                                            <categories>
+                                                <category>
+                                                    <title>Merge</title>
+                                                    <labels>merge</labels>
+                                                </category>
+                                            </categories>
+                                        </changelog>
+                                    </github>
+                                </release>
+                            </jreleaser>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

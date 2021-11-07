@@ -4,79 +4,32 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx-core</artifactId>
     <packaging>jar</packaging>
-    <version>11.4.2</version>
+    <version>11.4.3-SNAPSHOT</version>
 
     <parent>
         <groupId>com.dlsc.formsfx</groupId>
         <artifactId>formsfx</artifactId>
-        <version>11.4.2</version>
+        <version>11.4.3-SNAPSHOT</version>
     </parent>
 
     <name>FormsFX Core</name>
     <description>A framework for quickly creating form-based UIs.</description>
     <url>https://github.com/dlemmermann/formsfx</url>
-    <licenses>
-        <license>
-            <name>Apache 2.0</name>
-        </license>
-    </licenses>
+
     <scm>
-        <url>https://github.com/dlemmermann/formsfx</url>
+        <connection>scm:git:${repository.url}</connection>
+        <developerConnection>scm:git:${repository.url}</developerConnection>
+        <tag>HEAD</tag>
+        <url>${repository.url}</url>
     </scm>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1</url>
-        </repository>
-    </distributionManagement>
-
-    <developers>
-        <developer>
-            <name>Dirk Lemmermann</name>
-            <url>http://www.dlsc.com</url>
-            <organization>DLSC Software &amp; Consulting</organization>
-        </developer>
-    </developers>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.2.0</version>
                 <configuration>
                     <failOnError>false</failOnError>
                     <force>true</force>
@@ -121,24 +74,14 @@
                 </dependencies>
                 <executions>
                     <execution>
-                        <id>make-docs
-
-                        </id> <!-- this is used for inheritance merges -->
-                        <phase>package
-                        </phase> <!-- bind to the packaging phase -->
+                        <id>make-docs</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the packaging phase -->
                         <goals>
                             <goal>aggregate</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
-
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -150,7 +93,7 @@
                     </licenseResolver>
                     <organizationName>DLSC Software &amp; Consulting GmbH
                     </organizationName>
-                    <inceptionYear>2019</inceptionYear>
+                    <inceptionYear>2017</inceptionYear>
                     <projectName>FormsFX</projectName>
                     <processStartTag>
                         ========================LICENSE_START=================================
@@ -162,7 +105,6 @@
                     <includes>
                         <includes>**/*.java</includes>
                     </includes>
-
                 </configuration>
                 <executions>
                     <execution>
@@ -180,7 +122,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
@@ -195,15 +136,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
-        </dependency>
-
-        <!-- Test Dependencies -->
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

@@ -2,18 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>com.dlsc.formsfx</groupId>
 		<artifactId>formsfx</artifactId>
-		<version>11.4.2</version>
+		<version>11.4.3-SNAPSHOT</version>
 	</parent>
 
-    <name>FormsFX Demo</name>
-    <packaging>jar</packaging>
-
-    <modelVersion>4.0.0</modelVersion>
-
     <artifactId>formsfx-demo</artifactId>
+    <name>FormsFX Demo</name>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -23,9 +21,8 @@
         <dependency>
             <groupId>com.dlsc.formsfx</groupId>
             <artifactId>formsfx-core</artifactId>
-            <version>11.4.2</version>
+            <version>11.4.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 
 </project>
