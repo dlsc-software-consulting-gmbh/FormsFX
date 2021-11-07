@@ -1,31 +1,51 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - v*
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to release from"
+        required: true
+        default: "master-11"
+      version:
+        description: "Release version"
+        required: true
 
 jobs:
-  release:
-    name: Release
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Version
-        id: version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
-
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
         with:
-          fetch-depth: 0
+          java-version: 11
+          distribution: 'zulu'
 
       - name: Cache Maven
         uses: actions/cache@v2
         with:
-          path: ~/.m2/repository
+          path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+
+      - name: Build
+        run: ./mvnw --no-transfer-progress -B --file pom.xml verify
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Setup Java
         uses: actions/setup-java@v2
@@ -37,6 +57,28 @@ jobs:
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Cache Maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Set version and tag
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          BRANCH=${{ github.event.inputs.branch }}
+          VERSION=${{ github.event.inputs.version }}
+          echo "Releasing $VERSION from $BRANCH branch"
+          git checkout $BRANCH
+          ./mvnw -B versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false -f pom.xml
+          git config --global user.email "kordamp-release-bot@kordamp.org"
+          git config --global user.name "kordamp-release-bot"
+          git commit -a -m "Releasing version $VERSION"
+          git tag v$VERSION
+          git push origin $BRANCH
+          git push origin v$VERSION
 
       - name: Release to Maven Central
         env:
