@@ -6,8 +6,8 @@
 
     <parent>
         <groupId>com.dlsc</groupId>
-        <artifactId>dlsc-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <artifactId>dlsc-maven-parent</artifactId>
+        <version>1.0.0</version>
     </parent>
 
     <groupId>com.dlsc.formsfx</groupId>
@@ -56,7 +56,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>0.8.0</version>
+                        <!-- !! DO NOT INHERIT TO CHILDREN PROJECTS !! -->
                         <inherited>false</inherited>
                         <configuration>
                             <jreleaser>
@@ -64,6 +64,7 @@
                                     <github>
                                         <branch>master-11</branch>
                                         <tagName>{{projectVersion}}</tagName>
+                                        <!-- tagged externally -->
                                         <skipTag>true</skipTag>
                                         <changelog>
                                             <formatted>ALWAYS</formatted>
