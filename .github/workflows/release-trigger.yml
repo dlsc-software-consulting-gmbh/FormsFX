@@ -1,0 +1,77 @@
+name: Release Trigger
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to release from"
+        required: true
+        default: "master-11"
+      version:
+        description: "Release version"
+        required: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: 'zulu'
+
+      - name: Cache Maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build
+        run: ./mvnw --no-transfer-progress -B --file pom.xml verify
+
+  tag:
+    name: Tag
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          # required for triggering release workflow on tagging
+          token: ${{ secrets.GIT_ACCESS_TOKEN }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          distribution: 'zulu'
+
+      - name: Cache Maven
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Create tag
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
+          BRANCH=${{ github.event.inputs.branch }}
+          VERSION=${{ github.event.inputs.version }}
+          echo "Releasing $VERSION from $BRANCH branch"
+          git checkout $BRANCH
+          ./mvnw -B versions:set -DnewVersion=$VERSION -Dversion.versions.plugin=2.7 -DgenerateBackupPoms=false -f pom.xml
+          git config --global user.email "kordamp-release-bot@kordamp.org"
+          git config --global user.name "kordamp-release-bot"
+          git commit -a -m "Releasing version $VERSION"
+          git tag v$VERSION
+          git push origin $BRANCH
+          git push origin v$VERSION
