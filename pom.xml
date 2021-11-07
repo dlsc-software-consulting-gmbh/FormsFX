@@ -64,8 +64,6 @@
                                     <github>
                                         <branch>master-11</branch>
                                         <tagName>{{projectVersion}}</tagName>
-                                        <!-- tagged externally -->
-                                        <skipTag>true</skipTag>
                                         <changelog>
                                             <formatted>ALWAYS</formatted>
                                             <format>- {{commitShortHash}} {{commitTitle}}</format>

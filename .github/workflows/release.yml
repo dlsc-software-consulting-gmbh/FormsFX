@@ -3,10 +3,6 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: "Branch to release from"
-        required: true
-        default: "master-11"
       version:
         description: "Release version"
         required: true
@@ -65,20 +61,15 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Set version and tag
+      - name: Set version
         run: |
-          git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-          BRANCH=${{ github.event.inputs.branch }}
           VERSION=${{ github.event.inputs.version }}
-          echo "Releasing $VERSION from $BRANCH branch"
-          git checkout $BRANCH
+          echo "Releasing $VERSION"
           ./mvnw -B versions:set -DnewVersion=$VERSION -DgenerateBackupPoms=false -f pom.xml
           git config --global user.email "kordamp-release-bot@kordamp.org"
           git config --global user.name "kordamp-release-bot"
           git commit -a -m "Releasing version $VERSION"
-          git tag v$VERSION
-          git push origin $BRANCH
-          git push origin v$VERSION
+          git push origin
 
       - name: Release to Maven Central
         env:
