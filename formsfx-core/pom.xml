@@ -9,15 +9,16 @@
     <packaging>jar</packaging>
     <version>11.4.2</version>
 
+    <name>FormsFX Core</name>
+    <description>A framework for quickly creating form-based UIs.</description>
+    <url>https://github.com/dlemmermann/formsfx</url>
+
     <parent>
         <groupId>com.dlsc.formsfx</groupId>
         <artifactId>formsfx</artifactId>
         <version>11.4.2</version>
     </parent>
 
-    <name>FormsFX Core</name>
-    <description>A framework for quickly creating form-based UIs.</description>
-    <url>https://github.com/dlemmermann/formsfx</url>
     <licenses>
         <license>
             <name>Apache 2.0</name>
@@ -26,18 +27,6 @@
     <scm>
         <url>https://github.com/dlemmermann/formsfx</url>
     </scm>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1</url>
-        </repository>
-    </distributionManagement>
 
     <developers>
         <developer>
@@ -188,13 +177,11 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>${javafx.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>${javafx.version}</version>
         </dependency>
 
         <!-- Test Dependencies -->
@@ -202,7 +189,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 

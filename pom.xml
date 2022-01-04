@@ -10,19 +10,11 @@
     <packaging>pom</packaging>
     <version>11.4.2</version>
 
-    <prerequisites>
-        <maven>3.5.2</maven>
-    </prerequisites>
-
-    <distributionManagement>
-        <repository>
-            <id>bintray-dlsc-oss-repository</id>
-            <name>dlsc-oss-repository</name>
-            <url>
-                https://api.bintray.com/maven/dlsc-oss/repository/FormsFX/;publish=1
-            </url>
-        </repository>
-    </distributionManagement>
+    <parent>
+        <groupId>com.dlsc</groupId>
+        <artifactId>dlsc-maven-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
 
     <modules>
         <module>formsfx-core</module>
@@ -30,12 +22,17 @@
     </modules>
 
     <properties>
+        <project.identifier>formsfx</project.identifier>
+        <project.github.repository>dlsc-software-consulting-gmbh/FormsFX</project.github.repository>
+        <local.repository.path>/tmp/repository</local.repository.path>
+        <java.version>11</java.version>
+        <javafx.version>17.0.1</javafx.version>
         <sonar.projectKey>dlsc-software-consulting-gmbh_FormsFX</sonar.projectKey>
         <sonar.organization>dlsc-software-consulting-gmbh</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>16</javafx.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <build>
@@ -54,17 +51,27 @@
         </plugins>
     </build>
 
-    <dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
 
-        <!-- Test Dependencies -->
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-fxml</artifactId>
+                <version>${javafx.version}</version>
+            </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.1</version>
+            </dependency>
 
-    </dependencies>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
