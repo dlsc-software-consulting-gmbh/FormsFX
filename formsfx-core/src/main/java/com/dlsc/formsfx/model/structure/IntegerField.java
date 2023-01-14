@@ -53,7 +53,7 @@ public class IntegerField extends DataField<IntegerProperty, Integer, IntegerFie
                 return Integer.parseInt(string);
             }
         };
-        renderer = new SimpleIntegerControl();
+        renderer = () -> new SimpleIntegerControl();
 
         userInput.set(stringConverter.toString(value.getValue()));
     }

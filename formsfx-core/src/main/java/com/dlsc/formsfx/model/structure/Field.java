@@ -46,6 +46,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -144,7 +145,7 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      */
     protected TranslationService translationService;
 
-    protected SimpleControl<F> renderer;
+    protected Supplier<SimpleControl<F>> renderer;
 
     protected final Map<EventType<FieldEvent>,List<EventHandler<? super FieldEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
@@ -628,7 +629,7 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      *
      * @return Returns the current field to allow for chaining.
      */
-    public F render(SimpleControl<F> newValue) {
+    public F render(Supplier<SimpleControl<F>> newValue) {
         renderer = newValue;
         return (F) this;
     }
@@ -794,7 +795,7 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
     }
 
     public SimpleControl<F> getRenderer() {
-        return renderer;
+        return renderer.get();
     }
 
     public List<String> getErrorMessages() {

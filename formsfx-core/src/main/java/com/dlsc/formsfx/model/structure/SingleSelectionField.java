@@ -96,7 +96,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
             persistentSelection.setValue(null);
         });
 
-        renderer = new SimpleComboBoxControl<>();
+        renderer = () -> new SimpleComboBoxControl<>();
     }
 
     /**
