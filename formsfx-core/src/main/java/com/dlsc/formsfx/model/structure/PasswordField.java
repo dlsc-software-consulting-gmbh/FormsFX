@@ -53,7 +53,7 @@ public class PasswordField extends DataField<StringProperty, String, PasswordFie
                 return string;
             }
         };
-        renderer = () -> new SimplePasswordControl();
+        rendererSupplier = () -> new SimplePasswordControl();
 
         userInput.set(stringConverter.toString(value.getValue()));
     }

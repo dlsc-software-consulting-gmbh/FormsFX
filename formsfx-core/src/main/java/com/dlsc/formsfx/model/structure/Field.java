@@ -145,7 +145,8 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      */
     protected TranslationService translationService;
 
-    protected Supplier<SimpleControl<F>> renderer;
+    protected SimpleControl<F> renderer;
+    protected Supplier<SimpleControl<F>> rendererSupplier;
 
     protected final Map<EventType<FieldEvent>,List<EventHandler<? super FieldEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
@@ -629,8 +630,22 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      *
      * @return Returns the current field to allow for chaining.
      */
-    public F render(Supplier<SimpleControl<F>> newValue) {
+    public F render(SimpleControl<F> newValue) {
         renderer = newValue;
+        return (F) this;
+    }
+
+    /**
+     * Sets the control supplier that renders this field.
+     * The supplier is only called when required, i.e., when the GUI is created.
+     *
+     * @param newValue
+     *              The new control supplier to render the field.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F render(Supplier<SimpleControl<F>> newValue) {
+        rendererSupplier = newValue;
         return (F) this;
     }
 
@@ -795,7 +810,11 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
     }
 
     public SimpleControl<F> getRenderer() {
-        return renderer.get();
+        if (renderer == null) {
+            renderer = rendererSupplier.get();
+        }
+
+        return renderer;
     }
 
     public List<String> getErrorMessages() {

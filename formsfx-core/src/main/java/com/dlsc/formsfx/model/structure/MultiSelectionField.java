@@ -100,7 +100,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
             persistentSelection.clear();
         });
 
-        renderer = () -> new SimpleListViewControl<>();
+        rendererSupplier = () -> new SimpleListViewControl<>();
     }
 
     /**

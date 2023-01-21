@@ -53,7 +53,7 @@ public class BooleanField extends DataField<BooleanProperty, Boolean, BooleanFie
                 return Boolean.parseBoolean(string);
             }
         };
-        renderer = () -> new SimpleBooleanControl();
+        rendererSupplier = () -> new SimpleBooleanControl();
 
         userInput.set(stringConverter.toString(value.getValue()));
     }
