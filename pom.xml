@@ -8,7 +8,7 @@
     <groupId>com.dlsc.formsfx</groupId>
     <artifactId>formsfx</artifactId>
     <packaging>pom</packaging>
-    <version>11.5.0</version>
+    <version>11.6.0</version>
 
     <parent>
         <groupId>com.dlsc</groupId>
