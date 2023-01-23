@@ -56,7 +56,7 @@ public class StringField extends DataField<StringProperty, String, StringField> 
                 return string;
             }
         };
-        renderer = new SimpleTextControl();
+        rendererSupplier = () -> new SimpleTextControl();
 
         userInput.set(stringConverter.toString(value.getValue()));
     }

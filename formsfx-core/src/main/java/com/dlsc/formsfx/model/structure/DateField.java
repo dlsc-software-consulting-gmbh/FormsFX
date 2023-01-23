@@ -54,7 +54,7 @@ public class DateField extends DataField<ObjectProperty<LocalDate>, LocalDate, D
 
         Chronology chronology = Chronology.ofLocale(Locale.getDefault(Locale.Category.FORMAT));
         stringConverter = new LocalDateStringConverter(FormatStyle.SHORT, null, chronology);
-        renderer = new SimpleDateControl();
+        rendererSupplier = () -> new SimpleDateControl();
         userInput.setValue(null);
         userInput.setValue(stringConverter.toString((LocalDate) persistentValue.getValue()));
     }

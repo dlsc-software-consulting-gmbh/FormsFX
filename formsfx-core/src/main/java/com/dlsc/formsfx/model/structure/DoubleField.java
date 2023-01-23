@@ -52,7 +52,7 @@ public class DoubleField extends DataField<DoubleProperty, Double, DoubleField> 
                 return Double.parseDouble(string);
             }
         };
-        renderer = new SimpleDoubleControl();
+        rendererSupplier = () -> new SimpleDoubleControl();
 
         userInput.set(stringConverter.toString(value.getValue()));
     }

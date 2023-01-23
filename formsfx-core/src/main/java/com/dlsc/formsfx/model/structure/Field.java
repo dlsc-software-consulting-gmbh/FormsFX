@@ -46,6 +46,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -145,6 +146,7 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
     protected TranslationService translationService;
 
     protected SimpleControl<F> renderer;
+    protected Supplier<SimpleControl<F>> rendererSupplier;
 
     protected final Map<EventType<FieldEvent>,List<EventHandler<? super FieldEvent>>> eventHandlers = new ConcurrentHashMap<>();
 
@@ -634,6 +636,20 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
     }
 
     /**
+     * Sets the control supplier that renders this field.
+     * The supplier is only called when required, i.e., when the GUI is created.
+     *
+     * @param newValue
+     *              The new control supplier to render the field.
+     *
+     * @return Returns the current field to allow for chaining.
+     */
+    public F render(Supplier<SimpleControl<F>> newValue) {
+        rendererSupplier = newValue;
+        return (F) this;
+    }
+
+    /**
      * Activates or deactivates the {@code bindingModeListener} based on the
      * given {@code BindingMode}.
      *
@@ -794,6 +810,10 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
     }
 
     public SimpleControl<F> getRenderer() {
+        if (renderer == null) {
+            renderer = rendererSupplier.get();
+        }
+
         return renderer;
     }
 

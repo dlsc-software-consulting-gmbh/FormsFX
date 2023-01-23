@@ -113,7 +113,7 @@ public final class DemoModel {
                                 .required("required_error_message")
                                 .label("driving_label")
                                 .span(ColSpan.HALF)
-                                .render(new SimpleRadioButtonControl<>()),
+                                .render(() -> new SimpleRadioButtonControl<>()),
                         Field.ofStringType(country.timeZoneProperty())
                                 .label("time_zone_label")
                                 .placeholder("time_zone_placeholder")
@@ -142,7 +142,7 @@ public final class DemoModel {
                                 .label("continent_label")
                                 .required("required_error_message")
                                 .span(ColSpan.HALF)
-                                .render(new SimpleCheckBoxControl<>()),
+                                .render(() -> new SimpleCheckBoxControl<>()),
                         Field.ofMultiSelectionType(country.allCitiesProperty(), country.germanCitiesProperty())
                                 .label("german_cities_label")
                                 .span(ColSpan.HALF),
