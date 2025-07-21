@@ -9,9 +9,9 @@ package com.dlsc.formsfx.view.renderer;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *        http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
 
     /**
      * - SPACING is used to set the spacing of the section as well as the
-     *   spacing for vertical/horizontal gaps between controls.
+     * spacing for vertical/horizontal gaps between controls.
      */
     protected final int SPACING = 10;
 
@@ -81,6 +81,7 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
         // takes up too much horizontal space, wrap it to the next row.
 
         for (Element e : element.getElements()) {
+            if (!e.isVisible()) continue;
             int span = e.getSpan();
 
             if (currentColumnCount + span > COLUMN_COUNT) {
@@ -94,11 +95,20 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
                 c.setField(f);
 
                 grid.add(c, currentColumnCount, currentRow, span, 1);
-            } else if (e instanceof NodeElement){
-                grid.add(((NodeElement)e).getNode(), currentColumnCount, currentRow, span, 1);
+            } else if (e instanceof NodeElement) {
+                grid.add(((NodeElement) e).getNode(), currentColumnCount, currentRow, span, 1);
             }
 
             currentColumnCount += span;
         }
+    }
+
+    @Override
+    public void setupValueChangedListeners() {
+        ViewMixin.super.setupValueChangedListeners();
+        element.getElements().stream()
+                .filter(e -> e instanceof Field)
+                .map(Field.class::cast)
+                .forEach(f -> f.visibleProperty().addListener(ob -> layoutParts()));
     }
 }

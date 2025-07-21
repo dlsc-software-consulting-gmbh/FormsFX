@@ -42,6 +42,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Sacha Schmid
@@ -53,10 +54,36 @@ public class FieldTest {
     @BeforeClass
     public static void beforeClass() {
         try {
-            Platform.startup(() -> {});
+            Platform.startup(() -> {
+            });
         } catch (IllegalStateException ex) {
             // JavaFX may only be initialized once.
         }
+    }
+
+    @Test
+    public void fieldInvalidWhileVisibleTest() {
+        StringField s = Field.ofStringType("")
+                .required("This field is required")
+                .validate(StringLengthValidator.atLeast(1, "invalid"));
+        Assert.assertTrue(s.isVisible());
+        Assert.assertFalse(s.isValid());
+    }
+
+    @Test
+    public void fieldValidWhileInvisibleTest() {
+        String invisibleDefault = "invisible";
+        StringProperty valueProperty = new SimpleStringProperty("something");
+        BooleanProperty visibilityBinding = new SimpleBooleanProperty(false);
+        StringField s = Field.ofStringType(valueProperty)
+                .visibility(visibilityBinding, invisibleDefault);
+        s.required("This field is required").validate(StringLengthValidator.atLeast(1, "test"));
+        Assert.assertFalse(s.isVisible());
+        Assert.assertTrue(s.isValid());
+
+        valueProperty.setValue("something 2");
+        Assert.assertEquals(invisibleDefault, s.getValue());
+        Assert.assertFalse(s.hasChanged());
     }
 
     @Test

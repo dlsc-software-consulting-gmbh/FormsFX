@@ -80,7 +80,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // marked as changed until Field::persist or Field::reset are called
         // or the selection is back to the persistent selection.
 
-        changed.bind(Bindings.createBooleanBinding(() -> persistentSelection.get() == null ? this.selection.get() != null : !persistentSelection.get().equals(this.selection.get()), this.selection, persistentSelection));
+        changed.bind(Bindings.createBooleanBinding(() -> isVisible() && persistentSelection.get() == null ? this.selection.get() != null : !persistentSelection.get().equals(this.selection.get()), this.selection, persistentSelection, visibleProperty()));
 
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
@@ -276,6 +276,13 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * @return Returns whether the user selection is a valid value or not.
      */
     public boolean validate() {
+
+        if (!isVisible()) {
+            errorMessages.clear();
+            errorMessageKeys.clear();
+            valid.set(true);
+            return true;
+        }
 
         // Check all validation rules and collect any error messages.
 
