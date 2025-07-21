@@ -1,9 +1,13 @@
 package com.dlsc.formsfx.demo.view;
 
 import com.dlsc.formsfx.demo.model.DemoModel;
+import com.dlsc.formsfx.model.structure.MultiSelectionField;
 import com.dlsc.formsfx.model.structure.Section;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.dlsc.formsfx.view.util.ViewMixin;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -54,15 +58,16 @@ public class RootPane extends BorderPane implements ViewMixin {
 
     private Button editableToggle;
     private Button sectionToggle;
+    private Button visibilityToggleButton;
 
     private DemoModel model;
     private FormRenderer displayForm;
+    private final BooleanProperty visibilityToggle = new SimpleBooleanProperty(true);
 
     /**
      * The constructor to create the nodes and regions.
      *
-     * @param model
-     *          The model that holds the data.
+     * @param model The model that holds the data.
      */
     public RootPane(DemoModel model) {
         this.model = model;
@@ -103,6 +108,8 @@ public class RootPane extends BorderPane implements ViewMixin {
 
         editableToggle = new Button("Toggle Editable");
         sectionToggle = new Button("Toggle Sections");
+        visibilityToggleButton = new Button("Toggle Visibility");
+        visibilityToggleButton.getStyleClass().add("toggle-button");
         editableToggle.getStyleClass().add("toggle-button");
         sectionToggle.getStyleClass().add("toggle-button");
 
@@ -127,6 +134,7 @@ public class RootPane extends BorderPane implements ViewMixin {
         save.disableProperty().bind(model.getFormInstance().persistableProperty().not());
         reset.disableProperty().bind(model.getFormInstance().changedProperty().not());
         displayForm.prefWidthProperty().bind(scrollContent.prefWidthProperty());
+        model.getFormInstance().getFields().get(2).visibleProperty().bind(visibilityToggle);
     }
 
     /**
@@ -135,13 +143,19 @@ public class RootPane extends BorderPane implements ViewMixin {
      */
     @Override
     public void setupValueChangedListeners() {
-        model.getFormInstance().changedProperty().addListener((observable, oldValue, newValue) -> changedLabel.setText("The form has " + (newValue ? "" : "not ") + "changed."));
-        model.getFormInstance().validProperty().addListener((observable, oldValue, newValue) -> validLabel.setText("The form is " + (newValue ? "" : "not ") + "valid."));
-        model.getFormInstance().persistableProperty().addListener((observable, oldValue, newValue) -> persistableLabel.setText("The form is " + (newValue ? "" : "not ") + "persistable."));
+        model.getFormInstance().changedProperty().addListener((observable, oldValue, newValue) -> changedLabel
+                .setText("The form has " + (newValue ? "" : "not ") + "changed."));
+        model.getFormInstance().validProperty().addListener((observable, oldValue, newValue) -> validLabel
+                .setText("The form is " + (newValue ? "" : "not ") + "valid."));
+        model.getFormInstance().persistableProperty().addListener((observable, oldValue, newValue) -> persistableLabel
+                .setText("The form is " + (newValue ? "" : "not ") + "persistable."));
 
-        model.getCountry().nameProperty().addListener((observable, oldValue, newValue) -> countryLabel.setText("Country: " + newValue));
-        model.getCountry().currencyShortProperty().addListener((observable, oldValue, newValue) -> currencyLabel.setText("Currency: " + newValue));
-        model.getCountry().populationProperty().addListener((observable, oldValue, newValue) -> populationLabel.setText("Population: " + newValue));
+        model.getCountry().nameProperty()
+                .addListener((observable, oldValue, newValue) -> countryLabel.setText("Country: " + newValue));
+        model.getCountry().currencyShortProperty()
+                .addListener((observable, oldValue, newValue) -> currencyLabel.setText("Currency: " + newValue));
+        model.getCountry().populationProperty()
+                .addListener((observable, oldValue, newValue) -> populationLabel.setText("Population: " + newValue));
     }
 
     /**
@@ -164,12 +178,19 @@ public class RootPane extends BorderPane implements ViewMixin {
             languageDE.setDisable(false);
         });
 
-        sectionToggle.setOnAction(event -> model.getFormInstance().getGroups().stream().filter(s -> s instanceof Section).forEach(s -> {
-            Section sec = (Section) s;
-            sec.collapse(!sec.isCollapsed());
-        }));
-        
-        editableToggle.setOnAction(event -> model.getFormInstance().getFields().forEach(s -> s.editable(!s.isEditable())));
+        sectionToggle.setOnAction(
+                event -> model.getFormInstance().getGroups().stream().filter(s -> s instanceof Section).forEach(s -> {
+                    Section sec = (Section) s;
+                    sec.collapse(!sec.isCollapsed());
+                }));
+
+        editableToggle
+                .setOnAction(event -> model.getFormInstance().getFields().forEach(s -> s.editable(!s.isEditable())));
+
+        visibilityToggleButton.setOnAction(event -> {
+            visibilityToggle.set(!visibilityToggle.get());
+            System.out.println("visibilityToggle = " + visibilityToggle.get());
+        });
     }
 
     /**
@@ -224,7 +245,7 @@ public class RootPane extends BorderPane implements ViewMixin {
         HBox.setHgrow(editableToggle, Priority.ALWAYS);
         HBox.setHgrow(sectionToggle, Priority.ALWAYS);
         toggleContent.setPadding(new Insets(10));
-        toggleContent.getChildren().addAll(editableToggle, sectionToggle);
+        toggleContent.getChildren().addAll(editableToggle, sectionToggle, visibilityToggleButton);
         toggleContent.setSpacing(10);
         toggleContent.setPrefWidth(200);
         toggleContent.getStyleClass().add("bordered");

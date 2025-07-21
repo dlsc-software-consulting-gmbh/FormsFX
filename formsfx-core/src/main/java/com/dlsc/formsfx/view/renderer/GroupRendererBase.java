@@ -69,6 +69,11 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
             colConst.setPercentWidth(100.0 / COLUMN_COUNT);
             grid.getColumnConstraints().add(colConst);
         }
+        renderElements();
+    }
+
+    private void renderElements() {
+        int COLUMN_COUNT = 12;
 
         grid.setHgap(SPACING);
         grid.setVgap(SPACING);
@@ -109,6 +114,9 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
         element.getElements().stream()
                 .filter(e -> e instanceof Field)
                 .map(Field.class::cast)
-                .forEach(f -> f.visibleProperty().addListener(ob -> layoutParts()));
+                .forEach(f -> f.visibleProperty().addListener(ob -> {
+                    grid.getChildren().clear();
+                    renderElements();
+                }));
     }
 }

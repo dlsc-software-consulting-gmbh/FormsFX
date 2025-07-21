@@ -60,7 +60,8 @@ public abstract class SimpleControl<F extends Field> extends GridPane implements
 
     public void setField(F field) {
         if (this.field != null) {
-            throw new IllegalStateException("Cannot change a control's field once set.");
+            return;
+//            throw new IllegalStateException("Cannot change a control's field once set.");
         }
 
         this.field = field;
