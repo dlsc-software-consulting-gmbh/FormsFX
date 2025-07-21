@@ -43,8 +43,8 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
      * Internal constructor for the {@code SelectionField} class. To create new
      * elements, see the static factory methods in {@code Field}.
      *
-     * @see Field::ofMultiSelectionType
-     * @see Field::ofSingleSelectionType
+     * @see Field#ofMultiSelectionType
+     * @see Field#ofSingleSelectionType
      *
      * @param items
      *              The list of available items on the field.

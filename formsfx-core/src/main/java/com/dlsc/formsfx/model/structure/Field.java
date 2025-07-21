@@ -165,12 +165,12 @@ public abstract class Field<F extends Field<F>> extends Element<F> implements Fo
      * Internal constructor for the {@code Field} class. To create new elements,
      * see the static factory methods in this class.
      *
-     * @see Field::ofStringType
-     * @see Field::ofIntegerType
-     * @see Field::ofDoubleType
-     * @see Field::ofBooleanType
-     * @see Field::ofMultiSelectionType
-     * @see Field::ofSingleSelectionType
+     * @see Field#ofStringType
+     * @see Field#ofIntegerType
+     * @see Field#ofDoubleType
+     * @see Field#ofBooleanType
+     * @see Field#ofMultiSelectionType
+     * @see Field#ofSingleSelectionType
      */
     protected Field() {
 

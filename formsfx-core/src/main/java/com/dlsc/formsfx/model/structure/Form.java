@@ -211,7 +211,7 @@ public class Form {
     /**
      * Persists the values for all elements contained in this form's groups.
      *
-     * @see Field::reset
+     * @see Field#reset
      */
     public void persist() {
         if (!isPersistable()) {
@@ -226,7 +226,7 @@ public class Form {
     /**
      * Resets the values for all elements contained in this form's groups.
      *
-     * @see Field::reset
+     * @see Field#reset
      */
     public void reset() {
         if (!hasChanged()) {

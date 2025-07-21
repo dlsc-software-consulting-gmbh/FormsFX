@@ -109,10 +109,10 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      *                                of the field.
      * @param persistentValueProperty The property that is used to store the latest persisted
      *                                value of the field.
-     * @see Field::ofStringType
-     * @see Field::ofIntegerType
-     * @see Field::ofDoubleType
-     * @see Field::ofBooleanType
+     * @see Field#ofStringType
+     * @see Field#ofIntegerType
+     * @see Field#ofDoubleType
+     * @see Field#ofBooleanType
      */
     protected DataField(P valueProperty, P persistentValueProperty) {
         value = valueProperty;
