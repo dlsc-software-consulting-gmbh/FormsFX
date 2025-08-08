@@ -42,6 +42,7 @@ public abstract class Element<E extends Element<E>> {
      * Whether the element is visible or not.
      */
     protected final BooleanProperty visible = new SimpleBooleanProperty(true);
+    protected final BooleanProperty blockLabel = new SimpleBooleanProperty(true);
 
     /**
      * Sets the id property of the current field.
@@ -75,6 +76,11 @@ public abstract class Element<E extends Element<E>> {
         if (visible.isBound()) visible.unbind();
         if (visibility != null)
             visible.bind(visibility);
+        return (E) this;
+    }
+
+    public E blockedLabel(boolean v) {
+        blockLabel.set(v);
         return (E) this;
     }
 
@@ -135,5 +141,9 @@ public abstract class Element<E extends Element<E>> {
 
     public BooleanProperty visibleProperty() {
         return visible;
+    }
+
+    public boolean isBlockLabel() {
+        return blockLabel.get();
     }
 }

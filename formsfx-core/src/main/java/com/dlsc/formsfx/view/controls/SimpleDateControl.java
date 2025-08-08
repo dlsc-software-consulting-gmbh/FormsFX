@@ -67,17 +67,43 @@ public class SimpleDateControl extends SimpleControl<DateField> {
 
         Node labelDescription = field.getLabelDescription();
         Node valueDescription = field.getValueDescription();
+        int fieldLabelColSpan = 2;
+        int controlRowIndex = 0;
+        int controlRowSpan = 1;
+        int controlColIndex = 2;
+        int controlColSpan = columns - fieldLabelColSpan;
+        if (field.isBlockLabel()) {
+            fieldLabelColSpan = columns;
+            controlColIndex = 0;
+            controlRowIndex = 1;
+            controlColSpan = columns;
+        }
 
-        add(fieldLabel, 0, 0, 2, 1);
+        add(fieldLabel, 0, 0, fieldLabelColSpan, 1);
+        GridPane.setValignment(fieldLabel, VPos.TOP);
         if (labelDescription != null) {
             GridPane.setValignment(labelDescription, VPos.TOP);
-            add(labelDescription, 0, 1, 2, 1);
+            add(labelDescription, 0, 1, fieldLabelColSpan, 1);
+            if (field.isBlockLabel())
+                controlRowIndex = 2;
         }
-        add(stack, 2, 0, columns - 2, 1);
+        add(picker, controlColIndex, controlRowIndex, controlColSpan, controlRowSpan);
+        GridPane.setValignment(picker, VPos.TOP);
         if (valueDescription != null) {
             GridPane.setValignment(valueDescription, VPos.TOP);
-            add(valueDescription, 2, 1, columns - 2, 1);
+            add(valueDescription, controlColIndex, controlRowIndex + controlRowSpan, columns - 2, 1);
         }
+//
+//        add(fieldLabel, 0, 0, 2, 1);
+//        if (labelDescription != null) {
+//            GridPane.setValignment(labelDescription, VPos.TOP);
+//            add(labelDescription, 0, 1, 2, 1);
+//        }
+//        add(stack, 2, 0, columns - 2, 1);
+//        if (valueDescription != null) {
+//            GridPane.setValignment(valueDescription, VPos.TOP);
+//            add(valueDescription, 2, 1, columns - 2, 1);
+//        }
     }
 
     @Override

@@ -111,10 +111,8 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
     @Override
     public void setupValueChangedListeners() {
         ViewMixin.super.setupValueChangedListeners();
-        element.getElements().stream()
-                .filter(e -> e instanceof Field)
-                .map(Field.class::cast)
-                .forEach(f -> f.visibleProperty().addListener(ob -> {
+        element.getElements()
+                .forEach(f -> f.visibleProperty().addListener((ob, ov, nv) -> {
                     grid.getChildren().clear();
                     renderElements();
                 }));

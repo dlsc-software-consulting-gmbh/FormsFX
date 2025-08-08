@@ -9,9 +9,9 @@ package com.dlsc.formsfx.view.controls;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *        http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,7 +39,7 @@ public class SimpleBooleanControl extends SimpleControl<BooleanField> {
 
     /**
      * - fieldLabel is the container that displays the label property of the
-     *   field.
+     * field.
      * - checkBox is the editable checkbox to set user input.
      * - container holds the checkbox so that it can be styled properly.
      */
@@ -74,16 +74,31 @@ public class SimpleBooleanControl extends SimpleControl<BooleanField> {
 
         Node labelDescription = field.getLabelDescription();
         Node valueDescription = field.getValueDescription();
+        int fieldLabelColSpan = 2;
+        int controlRowIndex = 0;
+        int controlRowSpan = 1;
+        int controlColIndex = 2;
+        int controlColSpan = columns - fieldLabelColSpan;
+        if (field.isBlockLabel()) {
+            fieldLabelColSpan = columns;
+            controlColIndex = 0;
+            controlRowIndex = 1;
+            controlColSpan = columns;
+        }
 
-        add(fieldLabel, 0, 0, 2, 1);
+        add(fieldLabel, 0, 0, fieldLabelColSpan, 1);
+        GridPane.setValignment(fieldLabel, VPos.TOP);
         if (labelDescription != null) {
             GridPane.setValignment(labelDescription, VPos.TOP);
-            add(labelDescription, 0, 1, 2, 1);
+            add(labelDescription, 0, 1, fieldLabelColSpan, 1);
+            if (field.isBlockLabel())
+                controlRowIndex = 2;
         }
-        add(container, 2, 0, columns - 2, 1);
+        add(container, controlColIndex, controlRowIndex, controlColSpan, controlRowSpan);
+        GridPane.setValignment(container, VPos.TOP);
         if (valueDescription != null) {
             GridPane.setValignment(valueDescription, VPos.TOP);
-            add(valueDescription, 2, 1, columns - 2, 1);
+            add(valueDescription, controlColIndex, controlRowIndex + controlRowSpan, columns - 2, 1);
         }
     }
 

@@ -23,18 +23,7 @@ package com.dlsc.formsfx.model.structure;
 import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.util.ColSpan;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -42,7 +31,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Sacha Schmid
@@ -68,22 +56,6 @@ public class FieldTest {
                 .validate(StringLengthValidator.atLeast(1, "invalid"));
         Assert.assertTrue(s.isVisible());
         Assert.assertFalse(s.isValid());
-    }
-
-    @Test
-    public void fieldValidWhileInvisibleTest() {
-        String invisibleDefault = "invisible";
-        StringProperty valueProperty = new SimpleStringProperty("something");
-        BooleanProperty visibilityBinding = new SimpleBooleanProperty(false);
-        StringField s = Field.ofStringType(valueProperty)
-                .visibility(visibilityBinding, invisibleDefault);
-        s.required("This field is required").validate(StringLengthValidator.atLeast(1, "test"));
-        Assert.assertFalse(s.isVisible());
-        Assert.assertTrue(s.isValid());
-
-        valueProperty.setValue("something 2");
-        Assert.assertEquals(invisibleDefault, s.getValue());
-        Assert.assertFalse(s.hasChanged());
     }
 
     @Test

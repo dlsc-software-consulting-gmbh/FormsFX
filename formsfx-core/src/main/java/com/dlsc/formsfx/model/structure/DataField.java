@@ -62,7 +62,6 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      */
     protected final P value;
     protected final P persistentValue;
-    protected V invisibleValue;
     protected final StringProperty userInput = new SimpleStringProperty("");
 
     /**
@@ -141,7 +140,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
 
         visible.addListener((ob, ov, nv) -> {
             if (!nv) {
-                value.setValue(invisibleValue);
+                reset();
             }
         });
     }
@@ -350,16 +349,6 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      */
     protected boolean validateRequired(String newValue) {
         return isVisible() && (!isRequired() || (isRequired() && !newValue.isEmpty()));
-    }
-
-    public F visibility(boolean defaultVisibility, V invisibleValue) {
-        this.invisibleValue = invisibleValue;
-        return super.visibility(defaultVisibility);
-    }
-
-    public F visibility(ObservableBooleanValue visibility, V invisibleValue) {
-        this.invisibleValue = invisibleValue;
-        return super.visibility(visibility);
     }
 
     /**

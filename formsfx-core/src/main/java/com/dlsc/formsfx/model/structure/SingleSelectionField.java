@@ -9,9 +9,9 @@ package com.dlsc.formsfx.model.structure;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *        http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,12 @@ import com.dlsc.formsfx.model.util.BindingMode;
 import com.dlsc.formsfx.model.validators.ValidationResult;
 import com.dlsc.formsfx.model.validators.Validator;
 import com.dlsc.formsfx.view.controls.SimpleComboBoxControl;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.ObjectProperty;
@@ -59,10 +61,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
     /**
      * The constructor of {@code SingleSelectionField}.
      *
-     * @param items
-     *              The property that is used to store the items of the field.
-     * @param selection
-     *              The index of the item that is to be selected.
+     * @param items     The property that is used to store the items of the field.
+     * @param selection The index of the item that is to be selected.
      */
     protected SingleSelectionField(ListProperty<V> items, int selection) {
         super(items);
@@ -80,7 +80,10 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
         // marked as changed until Field::persist or Field::reset are called
         // or the selection is back to the persistent selection.
 
-        changed.bind(Bindings.createBooleanBinding(() -> isVisible() && persistentSelection.get() == null ? this.selection.get() != null : !persistentSelection.get().equals(this.selection.get()), this.selection, persistentSelection, visibleProperty()));
+        changed.bind(Bindings.createBooleanBinding(() -> {
+            if (!isVisible()) return false;
+            return persistentSelection.get() == null ? this.selection.get() != null : !persistentSelection.get().equals(this.selection.get());
+        }, this.selection, persistentSelection, visibleProperty()));
 
         // Changes to the user input are reflected in the value only if the new
         // user input is valid.
@@ -96,18 +99,15 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
             persistentSelection.setValue(null);
         });
 
-        rendererSupplier = () -> new SimpleComboBoxControl<>();
+        rendererSupplier = SimpleComboBoxControl::new;
     }
 
     /**
      * Updates the list of available items to a new list, along with a
      * pre-defined selection.
      *
-     * @param newValue
-     *              The new list of items.
-     * @param newSelection
-     *              The new pre-defined selection.
-     *
+     * @param newValue     The new list of items.
+     * @param newSelection The new pre-defined selection.
      * @return Returns the current field to allow for chaining.
      */
     public SingleSelectionField<V> items(List<V> newValue, int newSelection) {
@@ -125,9 +125,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * Updates the list of available items to a new list, without a
      * pre-defined selection.
      *
-     * @param newValue
-     *              The new list of items.
-     *
+     * @param newValue The new list of items.
      * @return Returns the current field to allow for chaining.
      */
     public SingleSelectionField<V> items(List<V> newValue) {
@@ -138,10 +136,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * Sets the list of validators for the current field. This overrides all
      * validators that have previously been added.
      *
-     * @param newValue
-     *              The validators that are to be used for validating this
-     *              field.
-     *
+     * @param newValue The validators that are to be used for validating this
+     *                 field.
      * @return Returns the current field to allow for chaining.
      */
     @SafeVarargs
@@ -156,9 +152,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
     /**
      * Sets the selection to the element at the given index.
      *
-     * @param index
-     *              The index of the element to be selected.
-     *
+     * @param index The index of the element to be selected.
      * @return Returns the current field to allow for chaining.
      */
     public SingleSelectionField<V> select(int index) {
@@ -188,12 +182,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * Binds the given items and selection property with the corresponding
      * elements.
      *
-     * @param itemsBinding
-     *          The items property to be bound with.
-     *
-     * @param selectionBinding
-     *          The selection property to be bound with.
-     *
+     * @param itemsBinding     The items property to be bound with.
+     * @param selectionBinding The selection property to be bound with.
      * @return Returns the current field to allow for chaining.
      */
     public SingleSelectionField<V> bind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
@@ -207,12 +197,8 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * Unbinds the given items and selection property with the corresponding
      * elements.
      *
-     * @param itemsBinding
-     *          The items property to be unbound with.
-     *
-     * @param selectionBinding
-     *          The selection property to be unbound with.
-     *
+     * @param itemsBinding     The items property to be unbound with.
+     * @param selectionBinding The selection property to be unbound with.
      * @return Returns the current field to allow for chaining.
      */
     public SingleSelectionField<V> unbind(ListProperty<V> itemsBinding, ObjectProperty<V> selectionBinding) {
