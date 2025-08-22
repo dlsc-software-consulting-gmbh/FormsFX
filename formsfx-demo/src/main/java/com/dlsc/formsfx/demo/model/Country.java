@@ -15,32 +15,31 @@ import java.time.Month;
  */
 public class Country {
 
-    private StringProperty name = new SimpleStringProperty("Switzerland");
-    private StringProperty iso = new SimpleStringProperty("CH");
-    private BooleanProperty independence = new SimpleBooleanProperty(true);
-    private ObjectProperty<LocalDate> independenceDay = new SimpleObjectProperty<>(LocalDate.of(1648, Month.OCTOBER, 24));
+    private final StringProperty name = new SimpleStringProperty("Switzerland");
+    private final StringProperty iso = new SimpleStringProperty("CH");
+    private final BooleanProperty independence = new SimpleBooleanProperty(true);
+    private final ObjectProperty<LocalDate> independenceDay = new SimpleObjectProperty<>(LocalDate.of(1648, Month.OCTOBER, 24));
 
-    private StringProperty currencyShort = new SimpleStringProperty("CHF");
-    private StringProperty currencyLong = new SimpleStringProperty("Swiss Franc");
+    private final StringProperty currencyShort = new SimpleStringProperty("CHF");
+    private final StringProperty currencyLong = new SimpleStringProperty("Swiss Franc");
 
-    private IntegerProperty population = new SimpleIntegerProperty(8401120);
-    private DoubleProperty area = new SimpleDoubleProperty(41285);
-    private StringProperty tld = new SimpleStringProperty(".ch");
+    private final IntegerProperty population = new SimpleIntegerProperty(8401120);
+    private final DoubleProperty area = new SimpleDoubleProperty(41285);
+    private final StringProperty tld = new SimpleStringProperty(".ch");
 
-    private StringProperty dateFormat = new SimpleStringProperty("dd.mm.yyyy");
-    private ObjectProperty<String> driverSide = new SimpleObjectProperty<>("Right");
-    private StringProperty timeZone = new SimpleStringProperty("CET");
-    private StringProperty summerTimeZone = new SimpleStringProperty("CEST");
+    private final StringProperty dateFormat = new SimpleStringProperty("dd.mm.yyyy");
+    private final ObjectProperty<String> driverSide = new SimpleObjectProperty<>("Right");
+    private final StringProperty timeZone = new SimpleStringProperty("CET");
+    private final StringProperty summerTimeZone = new SimpleStringProperty("CEST");
 
-    private ListProperty<String> allSides = new SimpleListProperty<>(FXCollections.observableArrayList("Right", "Left"));
-    private ListProperty<String> allCities = new SimpleListProperty<>(FXCollections.observableArrayList("Zurich (ZH)", "Geneva (GE)", "Basel (BS)", "Lausanne (VD)", "Bern (BE)", "Winterthur (ZH)", "Lucerne (LU)", "St. Gallen (SG)", "Lugano (TI)", "Biel (BE)"));
-    private ListProperty<String> allCapitals = new SimpleListProperty<>(FXCollections.observableArrayList("Zurich (ZH)", "Geneva (GE)", "Basel (BS)", "Lausanne (VD)", "Bern (BE)", "Winterthur (ZH)", "Lucerne (LU)", "St. Gallen (SG)", "Lugano (TI)", "Biel (BE)"));
-    private ListProperty<String> allContinents = new SimpleListProperty<>(FXCollections.observableArrayList("Africa", "Asia", "Europe", "North America", "South America", "Australia"));
+    private final ListProperty<String> allSides = new SimpleListProperty<>(FXCollections.observableArrayList("Right", "Left"));
+    private final ListProperty<String> allCities = new SimpleListProperty<>(FXCollections.observableArrayList("Zurich (ZH)", "Geneva (GE)", "Basel (BS)", "Lausanne (VD)", "Bern (BE)", "Winterthur (ZH)", "Lucerne (LU)", "St. Gallen (SG)", "Lugano (TI)", "Biel (BE)"));
+    private final ListProperty<String> allCapitals = new SimpleListProperty<>(FXCollections.observableArrayList("Zurich (ZH)", "Geneva (GE)", "Basel (BS)", "Lausanne (VD)", "Bern (BE)", "Winterthur (ZH)", "Lucerne (LU)", "St. Gallen (SG)", "Lugano (TI)", "Biel (BE)"));
+    private final ListProperty<String> allContinents = new SimpleListProperty<>(FXCollections.observableArrayList("Africa", "Asia", "Europe", "North America", "South America", "Australia"));
+    private final ListProperty<String> continents = new SimpleListProperty<>(FXCollections.observableArrayList("Europe"));
 
-    private ListProperty<String> continents = new SimpleListProperty<>(FXCollections.observableArrayList("Europe"));
-
-    private ObjectProperty<String> capital = new SimpleObjectProperty<>("Bern (BE)");
-    private ListProperty<String> germanCities = new SimpleListProperty<>(FXCollections.observableArrayList("Zurich (ZH)", "Basel (BS)", "Bern (BE)", "Winterthur (ZH)", "Lucerne (LU)", "St. Gallen (SG)", "Biel (BE)"));
+    private final ObjectProperty<String> capital = new SimpleObjectProperty<>("Bern (BE)");
+    private final ListProperty<String> germanCities = new SimpleListProperty<>(FXCollections.observableArrayList());
 
     public String getName() {
         return name.get();

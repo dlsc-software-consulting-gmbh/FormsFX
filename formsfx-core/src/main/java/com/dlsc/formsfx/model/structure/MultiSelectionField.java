@@ -249,7 +249,7 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * {@inheritDoc}
      */
     protected boolean validateRequired() {
-        return !isRequired() || (isRequired() && selection.size() > 0);
+        return !isVisible() || !isRequired() || (isRequired() && selection.size() > 0);
     }
 
     /**
@@ -260,7 +260,6 @@ public class MultiSelectionField<V> extends SelectionField<V, MultiSelectionFiel
      * @return Returns whether the user selection is a valid value or not.
      */
     public boolean validate() {
-
         if (!isVisible()) {
             errorMessages.clear();
             errorMessageKeys.clear();

@@ -72,7 +72,7 @@ public abstract class GroupRendererBase<V extends Group> extends StackPane imple
         renderElements();
     }
 
-    private void renderElements() {
+    protected void renderElements() {
         int COLUMN_COUNT = 12;
 
         grid.setHgap(SPACING);

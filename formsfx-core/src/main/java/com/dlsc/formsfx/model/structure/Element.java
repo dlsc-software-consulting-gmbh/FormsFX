@@ -73,7 +73,10 @@ public abstract class Element<E extends Element<E>> {
      * @return The current field to allow for chaining.
      */
     public E visibility(ObservableBooleanValue visibility) {
-        if (visible.isBound()) visible.unbind();
+        if (visible.isBound()) {
+            visible.unbind();
+            visible.set(true);
+        }
         if (visibility != null)
             visible.bind(visibility);
         return (E) this;

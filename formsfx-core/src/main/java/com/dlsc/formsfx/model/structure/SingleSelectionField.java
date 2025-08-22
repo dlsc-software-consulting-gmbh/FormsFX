@@ -251,7 +251,7 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * {@inheritDoc}
      */
     protected boolean validateRequired() {
-        return !isRequired() || (isRequired() && selection.get() != null);
+        return !isVisible() || !isRequired() || (isRequired() && selection.get() != null);
     }
 
     /**
@@ -262,7 +262,6 @@ public class SingleSelectionField<V> extends SelectionField<V, SingleSelectionFi
      * @return Returns whether the user selection is a valid value or not.
      */
     public boolean validate() {
-
         if (!isVisible()) {
             errorMessages.clear();
             errorMessageKeys.clear();

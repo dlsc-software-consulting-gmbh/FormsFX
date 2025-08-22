@@ -6,6 +6,7 @@ import com.dlsc.formsfx.model.structure.Section;
 import com.dlsc.formsfx.view.renderer.FormRenderer;
 import com.dlsc.formsfx.view.util.ViewMixin;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -131,10 +132,11 @@ public class RootPane extends BorderPane implements ViewMixin {
      */
     @Override
     public void setupBindings() {
+        validLabel.textProperty().bind(Bindings.format("Form is %s valid", Bindings.when(model.getFormInstance().validProperty()).then("").otherwise("not")));
         save.disableProperty().bind(model.getFormInstance().persistableProperty().not());
         reset.disableProperty().bind(model.getFormInstance().changedProperty().not());
         displayForm.prefWidthProperty().bind(scrollContent.prefWidthProperty());
-        model.getFormInstance().getFields().get(2).visibleProperty().bind(visibilityToggle);
+        model.visibilityProperty().bind(visibilityToggle);
     }
 
     /**
@@ -145,11 +147,8 @@ public class RootPane extends BorderPane implements ViewMixin {
     public void setupValueChangedListeners() {
         model.getFormInstance().changedProperty().addListener((observable, oldValue, newValue) -> changedLabel
                 .setText("The form has " + (newValue ? "" : "not ") + "changed."));
-        model.getFormInstance().validProperty().addListener((observable, oldValue, newValue) -> validLabel
-                .setText("The form is " + (newValue ? "" : "not ") + "valid."));
         model.getFormInstance().persistableProperty().addListener((observable, oldValue, newValue) -> persistableLabel
                 .setText("The form is " + (newValue ? "" : "not ") + "persistable."));
-
         model.getCountry().nameProperty()
                 .addListener((observable, oldValue, newValue) -> countryLabel.setText("Country: " + newValue));
         model.getCountry().currencyShortProperty()
@@ -189,11 +188,10 @@ public class RootPane extends BorderPane implements ViewMixin {
 
         visibilityToggleButton.setOnAction(event -> {
             visibilityToggle.set(!visibilityToggle.get());
-            System.out.println("visibilityToggle = " + visibilityToggle.get());
         });
     }
 
-    /**
+    /**visibilityProperty
      * This method is used to layout the nodes and regions properly.
      */
     @Override

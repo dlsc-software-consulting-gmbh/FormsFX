@@ -31,7 +31,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableBooleanValue;
 import javafx.util.StringConverter;
 
 import java.util.ArrayList;
@@ -142,6 +141,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
             if (!nv) {
                 reset();
             }
+            validate();
         });
     }
 
