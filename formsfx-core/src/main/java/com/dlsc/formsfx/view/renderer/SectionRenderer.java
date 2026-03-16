@@ -77,6 +77,11 @@ public class SectionRenderer extends GroupRendererBase<Section> {
         titledPane.collapsibleProperty().bind(element.collapsibleProperty());
         titledPane.expandedProperty().addListener((observable, oldValue, newValue) -> element.collapsedProperty().setValue(!newValue));
         element.collapsedProperty().addListener((observable, oldValue, newValue) -> titledPane.expandedProperty().setValue(!newValue));
+        element.getElements()
+                .forEach(f -> f.visibleProperty().addListener((ob, ov, nv) -> {
+                    grid.getChildren().clear();
+                    renderElements();
+                }));
     }
 
     /**

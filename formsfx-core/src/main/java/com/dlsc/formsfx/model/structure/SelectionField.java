@@ -9,9 +9,9 @@ package com.dlsc.formsfx.model.structure;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *        http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,14 +43,18 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
      * Internal constructor for the {@code SelectionField} class. To create new
      * elements, see the static factory methods in {@code Field}.
      *
-     * @see Field::ofMultiSelectionType
-     * @see Field::ofSingleSelectionType
-     *
-     * @param items
-     *              The list of available items on the field.
+     * @param items The list of available items on the field.
+     * @see Field#ofMultiSelectionType
+     * @see Field#ofSingleSelectionType
      */
     protected SelectionField(ListProperty<V> items) {
         this.items = items;
+        visible.addListener((ob, ov, nv) -> {
+            if (!nv) {
+                reset();
+            }
+            validate();
+        });
     }
 
     /**
@@ -64,16 +68,19 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
      * Validates a user input based on the field's selection and its validation
      * rules. Also considers the {@code required} flag. This method directly
      * updates the {@code valid} property.
-     *
+     * <p>
      * This method should not be called directly but instead only be used in
      * concrete subclasses.
      *
-     * @param errorMessages
-     *              A list of error messages based on the field's validators.
-     *
+     * @param errorMessages A list of error messages based on the field's validators.
      * @return Returns whether the user selection is a valid value or not.
      */
     protected boolean validate(List<String> errorMessages) {
+        if (!isVisible()) {
+            errorMessages.clear();
+            errorMessageKeys.clear();
+            return true;
+        }
         if (!validateRequired()) {
             if (isI18N() && requiredErrorKey.get() != null) {
                 this.errorMessageKeys.setAll(requiredErrorKey.get());
@@ -113,5 +120,4 @@ public abstract class SelectionField<V, F extends SelectionField<V, F>> extends 
     public ListProperty<V> itemsProperty() {
         return items;
     }
-
 }

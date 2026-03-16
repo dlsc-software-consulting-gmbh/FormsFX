@@ -12,6 +12,8 @@ import com.dlsc.formsfx.model.validators.StringLengthValidator;
 import com.dlsc.formsfx.view.controls.SimpleCheckBoxControl;
 import com.dlsc.formsfx.view.controls.SimpleRadioButtonControl;
 import com.dlsc.formsfx.view.util.ColSpan;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -33,7 +35,7 @@ public final class DemoModel {
      */
     private ResourceBundle rbDE = ResourceBundle.getBundle("demo-locale", new Locale("de", "CH"));
     private ResourceBundle rbEN = ResourceBundle.getBundle("demo-locale", new Locale("en", "UK"));
-
+    private final BooleanProperty visibility = new SimpleBooleanProperty(true);
     /**
      * The default locale is English, thus the {@code ResourceBundleService} is
      * initialised with it.
@@ -60,99 +62,102 @@ public final class DemoModel {
      */
     private void createForm() {
         formInstance = Form.of(
-                Group.of(
-                        Field.ofStringType(country.nameProperty())
-                                .label("country_label")
-                                .placeholder("country_placeholder")
-                                .required("required_error_message")
-                                .validate(StringLengthValidator.atLeast(2, "country_error_message")),
-                        Field.ofStringType(country.isoProperty())
-                                .label("ISO_3166_label")
-                                .placeholder("ISO_3166_placeholder")
-                                .required("required_error_message")
-                                .validate(StringLengthValidator.exactly(2, "ISO_3166_error_message")),
-                        Field.ofBooleanType(country.independenceProperty())
-                                .label("independent_label")
-                                .required("required_error_message"),
-                        Field.ofDate(country.getIndependenceDay())
-                                .label("independent_since_label")
-                                .required("required_error_message")
-                                .placeholder("independent_since_placeholder")
-                ),
-                Section.of(
-                        Field.ofStringType(country.currencyShortProperty())
-                                .label("currency_label")
-                                .placeholder("currency_placeholder")
-                                .validate(StringLengthValidator.exactly(3, "currency_error_message"))
-                                .span(ColSpan.HALF),
-                        Field.ofStringType(country.currencyLongProperty())
-                                .label("currency_long_label")
-                                .placeholder("currency_long_placeholder")
-                                .span(ColSpan.HALF),
-                        Field.ofDoubleType(country.areaProperty())
-                                .label("area_label")
-                                .format("format_error_message")
-                                .placeholder("area_placeholder")
-                                .validate(DoubleRangeValidator.atLeast(1, "area_error_message"))
-                                .span(ColSpan.HALF),
-                        Field.ofStringType(country.tldProperty())
-                                .label("internet_TLD_label")
-                                .placeholder("internet_TLD_placeholder")
-                                .span(ColSpan.HALF)
-                                .validate(
-                                        StringLengthValidator.exactly(3, "internet_TLD_error_message"),
-                                        RegexValidator.forPattern("^.[a-z]{2}$", "internet_TLD_format_error_message")
-                                ),
-                        Field.ofStringType(country.dateFormatProperty())
-                                .label("date_format_label")
-                                .placeholder("date_format_placeholder")
-                                .multiline(true)
-                                .span(ColSpan.HALF)
-                                .validate(StringLengthValidator.atLeast(8, "date_format_error_message")),
-                        Field.ofSingleSelectionType(country.allSidesProperty(), country.driverSideProperty())
-                                .required("required_error_message")
-                                .label("driving_label")
-                                .span(ColSpan.HALF)
-                                .render(() -> new SimpleRadioButtonControl<>()),
-                        Field.ofStringType(country.timeZoneProperty())
-                                .label("time_zone_label")
-                                .placeholder("time_zone_placeholder")
-                                .span(ColSpan.HALF)
-                                .validate(StringLengthValidator.exactly(3, "time_zone_error_message")),
-                        Field.ofStringType(country.summerTimeZoneProperty())
-                                .label("summer_time_zone_label")
-                                .placeholder("summer_time_zone_placeholder")
-                                .span(ColSpan.HALF)
-                                .validate(StringLengthValidator.atLeast(3, "summer_time_zone_error_message"))
-                ).title("other_information_label"),
-                Section.of(
-                        Field.ofSingleSelectionType(country.allCapitalsProperty(), country.capitalProperty())
-                                .label("capital_label")
-                                .required("required_error_message")
-                                .tooltip("capital_tooltip")
-                                .span(ColSpan.HALF),
-                        Field.ofIntegerType(country.populationProperty())
-                                .label("population_label")
-                                .format("format_error_message")
-                                .placeholder("population_placeholder")
-                                .required("required_error_message")
-                                .span(ColSpan.HALF)
-                                .validate(IntegerRangeValidator.atLeast(1, "population_error_message")),
-                        Field.ofMultiSelectionType(country.allContinentsProperty(), country.continentsProperty())
-                                .label("continent_label")
-                                .required("required_error_message")
-                                .span(ColSpan.HALF)
-                                .render(() -> new SimpleCheckBoxControl<>()),
-                        Field.ofMultiSelectionType(country.allCitiesProperty(), country.germanCitiesProperty())
-                                .label("german_cities_label")
-                                .span(ColSpan.HALF),
-                        Field.ofPasswordType("secret")
-                                .label("secret_label")
-                                .required("required_error_message")
-                                .span(ColSpan.HALF)
-                                .validate(StringLengthValidator.between(1, 10, "secret_error_message"))
-                ).title("cities_and_population_label")
-        ).title("form_label")
+                        Group.of(
+                                Field.ofStringType(country.nameProperty())
+                                        .label("country_label")
+                                        .placeholder("country_placeholder")
+                                        .required("required_error_message")
+                                        .validate(StringLengthValidator.atLeast(2, "country_error_message")),
+                                Field.ofStringType(country.isoProperty())
+                                        .label("ISO_3166_label")
+                                        .placeholder("ISO_3166_placeholder")
+                                        .required("required_error_message")
+                                        .validate(StringLengthValidator.exactly(2, "ISO_3166_error_message")),
+                                Field.ofBooleanType(country.independenceProperty())
+                                        .label("independent_label")
+                                        .required("required_error_message"),
+                                Field.ofDate(country.getIndependenceDay())
+                                        .label("independent_since_label")
+                                        .required("required_error_message")
+                                        .placeholder("independent_since_placeholder")
+                        ),
+                        Section.of(
+                                Field.ofStringType(country.currencyShortProperty())
+                                        .label("currency_label")
+                                        .placeholder("currency_placeholder")
+                                        .validate(StringLengthValidator.exactly(3, "currency_error_message"))
+                                        .span(ColSpan.HALF),
+                                Field.ofStringType(country.currencyLongProperty())
+                                        .label("currency_long_label")
+                                        .placeholder("currency_long_placeholder")
+                                        .span(ColSpan.HALF),
+                                Field.ofDoubleType(country.areaProperty())
+                                        .label("area_label")
+                                        .format("format_error_message")
+                                        .placeholder("area_placeholder")
+                                        .validate(DoubleRangeValidator.atLeast(1, "area_error_message"))
+                                        .span(ColSpan.HALF),
+                                Field.ofStringType(country.tldProperty())
+                                        .label("internet_TLD_label")
+                                        .placeholder("internet_TLD_placeholder")
+                                        .span(ColSpan.HALF)
+                                        .validate(
+                                                StringLengthValidator.exactly(3, "internet_TLD_error_message"),
+                                                RegexValidator.forPattern("^.[a-z]{2}$", "internet_TLD_format_error_message")
+                                        ),
+                                Field.ofStringType(country.dateFormatProperty())
+                                        .label("date_format_label")
+                                        .placeholder("date_format_placeholder")
+                                        .multiline(true)
+                                        .span(ColSpan.HALF)
+                                        .validate(StringLengthValidator.atLeast(8, "date_format_error_message")),
+                                Field.ofSingleSelectionType(country.allSidesProperty(), country.driverSideProperty())
+                                        .required("required_error_message")
+                                        .label("driving_label")
+                                        .span(ColSpan.HALF)
+                                        .render(SimpleRadioButtonControl::new),
+                                Field.ofStringType(country.timeZoneProperty())
+                                        .label("time_zone_label")
+                                        .placeholder("time_zone_placeholder")
+                                        .span(ColSpan.HALF)
+                                        .validate(StringLengthValidator.exactly(3, "time_zone_error_message")),
+                                Field.ofStringType(country.summerTimeZoneProperty())
+                                        .label("summer_time_zone_label")
+                                        .placeholder("summer_time_zone_placeholder")
+                                        .span(ColSpan.HALF)
+                                        .validate(StringLengthValidator.atLeast(3, "summer_time_zone_error_message"))
+                        ).title("other_information_label"),
+                        Section.of(
+                                Field.ofSingleSelectionType(country.allCapitalsProperty(), country.capitalProperty())
+                                        .label("capital_label")
+                                        .required("required_error_message")
+                                        .tooltip("capital_tooltip")
+                                        .span(ColSpan.HALF),
+                                Field.ofIntegerType(country.populationProperty())
+                                        .label("population_label")
+                                        .format("format_error_message")
+                                        .placeholder("population_placeholder")
+                                        .required("required_error_message")
+                                        .span(ColSpan.HALF)
+                                        .validate(IntegerRangeValidator.atLeast(1, "population_error_message")),
+                                Field.ofMultiSelectionType(country.allContinentsProperty(), country.continentsProperty())
+                                        .label("continent_label")
+                                        .required("required_error_message")
+                                        .span(ColSpan.HALF)
+                                        .render(SimpleCheckBoxControl::new),
+                                Field.ofMultiSelectionType(country.allCitiesProperty(), country.germanCitiesProperty())
+                                        .label("german_cities_label")
+                                        .required("selection_required")
+                                        .visibility(visibility)
+                                        .span(ColSpan.HALF),
+                                Field.ofPasswordType("secret")
+                                        .label("secret_label")
+                                        .required("required_error_message")
+                                        .span(ColSpan.HALF)
+                                        .visibility(visibility)
+                                        .validate(StringLengthValidator.between(1, 10, "secret_error_message"))
+                        ).title("cities_and_population_label")
+                ).title("form_label")
                 .i18n(rbs);
 
     }
@@ -179,4 +184,7 @@ public final class DemoModel {
         return country;
     }
 
+    public BooleanProperty visibilityProperty() {
+        return visibility;
+    }
 }

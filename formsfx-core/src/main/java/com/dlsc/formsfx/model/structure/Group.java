@@ -112,7 +112,7 @@ public class Group {
      * translation has been added to the form. Also applies the translation
      * to all contained elements.
      *
-     * @see Field::translate
+     * @see Field#translate
      *
      * @param newValue
      *              The new service to use for translating translatable values.
@@ -132,7 +132,7 @@ public class Group {
 
     /**
      * Persists the values for all contained elements.
-     * @see Field::persist
+     * @see Field#persist
      */
     public void persist() {
         if (!isValid()) {
@@ -149,7 +149,7 @@ public class Group {
 
     /**
      * Resets the values for all contained elements.
-     * @see Field::reset
+     * @see Field#reset
      */
     public void reset() {
         if (!hasChanged()) {

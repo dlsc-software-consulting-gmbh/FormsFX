@@ -27,7 +27,6 @@ package com.dlsc.formsfx.view.util;
  * @author Rinesch Murugathas
  */
 public enum ColSpan {
-
     FIVE_SIXTH(10),
     TWO_THIRD(8),
     HALF(6),

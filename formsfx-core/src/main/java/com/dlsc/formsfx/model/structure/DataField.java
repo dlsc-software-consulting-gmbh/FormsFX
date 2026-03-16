@@ -9,9 +9,9 @@ package com.dlsc.formsfx.model.structure;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *        http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,18 +46,18 @@ import java.util.stream.Collectors;
  * @author Rinesch Murugathas
  */
 public abstract class DataField<P extends Property, V, F extends Field<F>> extends Field<F> {
-  
+
     /**
      * Every field tracks its value in multiple ways.
-     *
+     * <p>
      * - The user input is bound to a specific control's input value and is a
-     *   1-to-1 representation of what the user enters.
+     * 1-to-1 representation of what the user enters.
      * - The value is the last valid value entered by the user. This means that
-     *   the value passes the type transformation of the concrete field and all
-     *   user-defined validations.
+     * the value passes the type transformation of the concrete field and all
+     * user-defined validations.
      * - The persistent value is the value that was last saved on the field. It
-     *   is the responsibility of the form creator to persist the field values
-     *   at the correct time.
+     * is the responsibility of the form creator to persist the field values
+     * at the correct time.
      */
     protected final P value;
     protected final P persistentValue;
@@ -72,6 +72,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * The value transformer is responsible for transforming the user input
      * string to the specific type of the field's value.
+     *
      * @deprecated Use DataField#stringConverter instead.
      */
     @Deprecated
@@ -86,7 +87,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
 
     /**
      * The format error is displayed when the value transformation fails.
-     *
+     * <p>
      * This property is translatable if a {@link TranslationService} is set on
      * the containing form.
      */
@@ -102,17 +103,14 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      * Internal constructor for the {@code DataField} class. To create new
      * elements, see the static factory methods in {@code Field}.
      *
-     * @see Field::ofStringType
-     * @see Field::ofIntegerType
-     * @see Field::ofDoubleType
-     * @see Field::ofBooleanType
-     *
-     * @param valueProperty
-     *              The property that is used to store the current valid value
-     *              of the field.
-     * @param persistentValueProperty
-     *              The property that is used to store the latest persisted
-     *              value of the field.
+     * @param valueProperty           The property that is used to store the current valid value
+     *                                of the field.
+     * @param persistentValueProperty The property that is used to store the latest persisted
+     *                                value of the field.
+     * @see Field#ofStringType
+     * @see Field#ofIntegerType
+     * @see Field#ofDoubleType
+     * @see Field#ofBooleanType
      */
     protected DataField(P valueProperty, P persistentValueProperty) {
         value = valueProperty;
@@ -123,7 +121,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
         // until Field::persist or Field::reset are called or the value is back
         // to the persistent value.
 
-        changed.bind(Bindings.createBooleanBinding(() -> !stringConverter.toString((V) persistentValue.getValue()).equals(userInput.getValue()), userInput, persistentValue));
+        changed.bind(Bindings.createBooleanBinding(() -> isVisible() && !stringConverter.toString((V) persistentValue.getValue()).equals(userInput.getValue()), userInput, persistentValue, visibleProperty()));
 
         // Whenever one of the translatable elements' keys change, update the
         // displayed value based on the new translation.
@@ -137,6 +135,13 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
             if (validate()) {
                 value.setValue(stringConverter.fromString(newValue));
             }
+        });
+
+        visible.addListener((ob, ov, nv) -> {
+            if (!nv) {
+                reset();
+            }
+            validate();
         });
     }
 
@@ -163,10 +168,8 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * Sets the string converter for the current field.
      *
-     * @param newValue
-     *              The string converter that transforms the user input string to
-     *              the field's underlying value and back.
-     *
+     * @param newValue The string converter that transforms the user input string to
+     *                 the field's underlying value and back.
      * @return Returns the current field to allow for chaining.
      */
     public F format(StringConverter<V> newValue) {
@@ -179,13 +182,10 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      * Applies a new string converter that converts the entered string input
      * to a concrete value.
      *
-     * @param newValue
-     *              The string converter that transforms the user input string to
-     *              the field's underlying value and back.
-     * @param errorMessage
-     *              The error message to display if the transformation was
-     *              unsuccessful.
-     *
+     * @param newValue     The string converter that transforms the user input string to
+     *                     the field's underlying value and back.
+     * @param errorMessage The error message to display if the transformation was
+     *                     unsuccessful.
      * @return Returns the current field to allow for chaining.
      */
     public F format(StringConverter<V> newValue, String errorMessage) {
@@ -204,10 +204,8 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * Sets the value transformer for the current field.
      *
-     * @param newValue
-     *              The value transformer that parses the user input string to
-     *              the field's underlying value.
-     *
+     * @param newValue The value transformer that parses the user input string to
+     *                 the field's underlying value.
      * @return Returns the current field to allow for chaining.
      * @deprecated Use format(StringConverter) instead
      */
@@ -222,13 +220,10 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      * Applies a new value transformer that converts the entered string input
      * to a concrete value.
      *
-     * @param newValue
-     *              The new value transformer. Takes a string as an input and
-     *              returns the concrete type.
-     * @param errorMessage
-     *              The error message to display if the transformation was
-     *              unsuccessful.
-     *
+     * @param newValue     The new value transformer. Takes a string as an input and
+     *                     returns the concrete type.
+     * @param errorMessage The error message to display if the transformation was
+     *                     unsuccessful.
      * @return Returns the current field to allow for chaining.
      * @deprecated Use format(StringConverter, errorMessage) instead
      */
@@ -250,10 +245,8 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      * Adds an error message to handle formatting errors with the default
      * value transformers.
      *
-     * @param errorMessage
-     *              The error message to display if the transformation was
-     *              unsuccessful.
-     *
+     * @param errorMessage The error message to display if the transformation was
+     *                     unsuccessful.
      * @return Returns the current field to allow for chaining.
      */
     public F format(String errorMessage) {
@@ -271,11 +264,9 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      * Sets the list of validators for the current field. This overrides all
      * validators that have previously been added.
      *
-     * @param newValue
-     *              The validators that are to be used for validating this
-     *              field. Limited to validators that are able to handle the
-     *              field's underlying type.
-     *
+     * @param newValue The validators that are to be used for validating this
+     *                 field. Limited to validators that are able to handle the
+     *                 field's underlying type.
      * @return Returns the current field to allow for chaining.
      */
     @SafeVarargs
@@ -290,9 +281,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * Binds the given property with the field.
      *
-     * @param binding
-     *          The property to be bound with.
-     *
+     * @param binding The property to be bound with.
      * @return Returns the current field to allow for chaining.
      */
     public F bind(P binding) {
@@ -305,9 +294,7 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     /**
      * Unbinds the given property with the field.
      *
-     * @param binding
-     *          The property to be unbound with.
-     *
+     * @param binding The property to be unbound with.
      * @return Returns the current field to allow for chaining.
      */
     public F unbind(P binding) {
@@ -355,15 +342,13 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
     }
 
     /**
-     * Validates that the new field input matches the required condition.
+     * Validates that the new field input matches the required condition, if the field is visible.
      *
-     * @param newValue
-     *              The new value to check for the required state.
-     *
+     * @param newValue The new value to check for the required state.
      * @return Returns whether the input matches the required condition.
      */
     protected boolean validateRequired(String newValue) {
-        return !isRequired() || (isRequired() && !newValue.isEmpty());
+        return isVisible() && (!isRequired() || (isRequired() && !newValue.isEmpty()));
     }
 
     /**
@@ -375,6 +360,14 @@ public abstract class DataField<P extends Property, V, F extends Field<F>> exten
      */
     public boolean validate() {
         String newValue = userInput.getValue();
+
+        if (!isVisible()) {
+            valid.set(true);
+            errorMessages.clear();
+            errorMessageKeys.clear();
+            valid.set(true);
+            return true;
+        }
 
         if (!validateRequired(newValue)) {
             if (isI18N() && !requiredErrorKey.get().isEmpty()) {
